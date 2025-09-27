@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MoodTunes - Match your mood to curated Spotify playlists">
+    <title>MoodTunes 🎵 - Mood-Based Music Player</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MoodTunes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Skip Navigation for Screen Readers -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <div class="container">
+        <main id="main-content" role="main">
+            <h1>MoodTunes <span role="img" aria-label="musical note">🎵</span></h1>
+            
+            <!-- Time-based suggestions -->
+            {% if time_suggestions %}
+            <div class="suggestions-section" role="region" aria-labelledby="time-suggestions-heading">
+                <h2 id="time-suggestions-heading" class="suggestions-title">
+                    <span role="img" aria-label="clock">🕐</span> Suggested for now
+                </h2>
+                <div class="quick-moods" role="group" aria-label="Time-based mood suggestions">
+                    {% for mood in time_suggestions %}
+                    <button type="button" class="mood-quick-btn" data-mood="{{ mood.key }}">
+                        <span role="img" aria-label="{{ mood.name.lower() }}">{{ mood.icon }}</span>
+                        {{ mood.name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Recent moods -->
+            {% if recent_moods %}
+            <div class="recent-section" role="region" aria-labelledby="recent-moods-heading">
+                <h2 id="recent-moods-heading" class="suggestions-title">
+                    <span role="img" aria-label="clockwise arrows">�</span> Recent moods
+                </h2>
+                <div class="quick-moods" role="group" aria-label="Recently selected moods">
+                    {% for mood in recent_moods %}
+                    <button type="button" class="mood-quick-btn recent-mood" data-mood="{{ mood.key }}">
+                        <span role="img" aria-label="{{ mood.name.lower() }}">{{ mood.icon }}</span>
+                        {{ mood.name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <form method="POST" id="moodForm" role="form" aria-label="Mood selection form">
+                <fieldset>
+                    <legend class="visually-hidden">Select your current mood</legend>
+                    <label for="mood">How are you feeling today?</label>
+                    <select name="mood" id="mood" aria-required="true" aria-describedby="mood-help">
+                        <option value="">Select your mood...</option>
+                        {% for category_name, category_data in mood_categories.items() %}
+                        <optgroup label="{{ category_data.icon }} {{ category_name }} - {{ category_data.description }}">
+                            {% for mood_key in category_data.moods %}
+                            {% set mood_info = get_mood_info(mood_key) %}
+                            <option value="{{ mood_key }}">{{ mood_info.icon }} {{ mood_info.name }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        {% endfor %}
+                    </select>
+                    <div id="mood-help" class="help-text">Choose a mood to get a matching Spotify playlist</div>
+                </fieldset>
+            </form>
+        <div id="loading" 
+             style="display: none;" 
+             role="status" 
+             aria-live="polite" 
+             aria-atomic="true">
+            <span role="img" aria-label="musical note">🎵</span> Opening your playlist...
+        </div>
+        
+        <!-- Embedded Spotify Player -->
+        <section id="spotify-player" 
+                 style="display: none; margin-top: 20px;" 
+                 role="region" 
+                 aria-labelledby="player-heading">
+            <h3 id="player-heading">Now Playing:</h3>
+            <iframe id="spotify-iframe" 
+                    src="" 
+                    width="100%" 
+                    height="352" 
+                    title="Spotify music player" 
+                    allow="encrypted-media">
+                <p>Your browser does not support embedded Spotify players. 
+                   <a href="#" id="spotify-fallback-link" target="_blank" rel="noopener noreferrer">
+                       Open playlist in Spotify
+                   </a>
+                </p>
+            </iframe>
+            <button id="close-player-btn" 
+                    type="button" 
+                    style="margin-top: 10px;"
+                    aria-label="Close Spotify player">
+                Close Player
+            </button>
+        </section>
+        </main>
+    </div>
+
+    <!-- PWA Install Banner -->
+    <div id="install-banner" class="install-banner" style="display: none;">
+        <div class="install-content">
+            <span role="img" aria-label="mobile phone">📱</span>
+            <span>Install MoodTunes for quick access!</span>
+            <button id="install-btn" class="install-btn">Install</button>
+            <button id="dismiss-install" class="dismiss-btn" aria-label="Dismiss install prompt">✕</button>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+    <script src="/static/pwa.js"></script>
+</body>
+</html>
