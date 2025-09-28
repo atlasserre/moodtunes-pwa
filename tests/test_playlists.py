@@ -7,7 +7,7 @@ playlist system, covering:
 Core Features:
 - Playlist data structure validation
 - Mood categorization and metadata
-- Time-based mood suggestion algorithms  
+- Time-based mood suggestion algorithms
 - Search functionality across multiple fields
 - Spotify URL generation and validation
 - Session-based mood tracking

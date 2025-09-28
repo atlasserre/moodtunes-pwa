@@ -7,7 +7,7 @@ that can be run locally during development.
 
 Usage:
     python scripts/eco_check.py
-    
+
 Exit codes:
     0: Eco check passed
     1: Eco check failed (high environmental impact)
