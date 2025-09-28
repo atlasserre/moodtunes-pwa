@@ -11,10 +11,10 @@ import sys
 
 def execute_curl_request(query):
     """Execute curl request to search endpoint.
-    
+
     Args:
         query: Search query string
-        
+
     Returns:
         tuple: (success, data) where success is bool and data is parsed JSON
     """
@@ -39,11 +39,11 @@ def execute_curl_request(query):
 
 def validate_search_response(data, expected_count):
     """Validate search response data and count.
-    
+
     Args:
         data: Parsed JSON response data
         expected_count: Expected number of results
-        
+
     Returns:
         bool: True if validation passes
     """
@@ -56,7 +56,7 @@ def validate_search_response(data, expected_count):
             return False
 
     actual_count = len(data.get("moods", []))
-    
+
     if actual_count != expected_count:
         print(f"❌ Expected {expected_count} results, got {actual_count}")
         if actual_count > 0:
@@ -70,27 +70,27 @@ def validate_search_response(data, expected_count):
 
 def display_results(data):
     """Display search results in formatted output.
-    
+
     Args:
         data: Parsed JSON response containing mood results
     """
     actual_count = len(data.get("moods", []))
     print(f"✅ Found {actual_count} result(s)")
-    
+
     for mood in data.get("moods", []):
         print(f"   - {mood.get('name', 'Unknown')}: {mood.get('description', 'No description')}")
 
 
 def run_curl_test(query, expected_count):
     """Test search using curl command with comprehensive validation.
-    
+
     Executes a curl-based search request and validates the response
     structure, success status, and result count.
-    
+
     Args:
         query (str): Search query to test
         expected_count (int): Expected number of results
-        
+
     Returns:
         bool: True if test passes, False otherwise
     """

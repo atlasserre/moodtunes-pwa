@@ -79,13 +79,13 @@ def analyze_code_efficiency() -> Dict[str, float]:
 
 def get_complexity_metrics() -> float:
     """Analyze code complexity using radon.
-    
+
     Returns:
         float: Average cyclomatic complexity across all functions
     """
     complexity_output, _, complexity_rc = run_command("radon cc . -a -nc --json")
     avg_complexity = 5.0  # Default assumption
-    
+
     try:
         if complexity_rc == 0 and complexity_output.strip():
             complexity_data = json.loads(complexity_output)
@@ -104,16 +104,16 @@ def get_complexity_metrics() -> float:
 
     except Exception as e:
         print(f"⚠️  Complexity analysis failed: {e}")
-    
+
     return avg_complexity
 
 
 def calculate_bundle_factor(bundle_size_kb: float) -> float:
     """Calculate bundle size eco factor score.
-    
+
     Args:
         bundle_size_kb: Bundle size in kilobytes
-        
+
     Returns:
         float: Score from 0-100 (higher is better)
     """
@@ -129,10 +129,10 @@ def calculate_bundle_factor(bundle_size_kb: float) -> float:
 
 def calculate_complexity_factor(avg_complexity: float) -> float:
     """Calculate complexity eco factor score.
-    
+
     Args:
         avg_complexity: Average cyclomatic complexity
-        
+
     Returns:
         float: Score from 0-100 (higher is better)
     """
@@ -148,11 +148,11 @@ def calculate_complexity_factor(avg_complexity: float) -> float:
 
 def calculate_efficiency_factor(total_lines: int, bundle_size_kb: float) -> float:
     """Calculate code efficiency factor score.
-    
+
     Args:
         total_lines: Total lines of code
         bundle_size_kb: Bundle size in kilobytes
-        
+
     Returns:
         float: Score from 0-100 (higher is better)
     """
@@ -167,12 +167,12 @@ def calculate_efficiency_factor(total_lines: int, bundle_size_kb: float) -> floa
 
 def calculate_eco_score() -> Dict[str, any]:
     """Calculate comprehensive environmental impact score for the application.
-    
+
     Analyzes multiple factors that contribute to environmental impact:
     - Bundle size (affects download time and bandwidth usage)
-    - Code complexity (affects CPU processing requirements) 
+    - Code complexity (affects CPU processing requirements)
     - Code efficiency (lines of code per KB of bundle size)
-    
+
     Returns:
         Dict[str, any]: Dictionary containing eco metrics and overall score
     """
@@ -182,7 +182,7 @@ def calculate_eco_score() -> Dict[str, any]:
     bundle_size_kb = calculate_bundle_size()
     code_metrics = analyze_code_efficiency()
     avg_complexity = get_complexity_metrics()
-    
+
     print(f"📦 Total bundle size: {bundle_size_kb:.1f} KB")
     print(f"📄 Total code lines: {code_metrics['total_lines']}")
     print(f"🔄 Average complexity: {avg_complexity:.1f}")
@@ -190,13 +190,13 @@ def calculate_eco_score() -> Dict[str, any]:
     # Calculate individual eco factors
     bundle_factor = calculate_bundle_factor(bundle_size_kb)
     complexity_factor = calculate_complexity_factor(avg_complexity)
-    efficiency_factor = calculate_efficiency_factor(code_metrics['total_lines'], bundle_size_kb)
+    efficiency_factor = calculate_efficiency_factor(code_metrics["total_lines"], bundle_size_kb)
 
     # Calculate weighted eco score (bundle size has highest impact)
     eco_score = (
-        bundle_factor * 0.4 +      # Bundle size affects download/bandwidth
-        complexity_factor * 0.3 +  # Complexity affects CPU processing
-        efficiency_factor * 0.3    # Efficiency affects overall resource usage
+        bundle_factor * 0.4
+        + complexity_factor * 0.3  # Bundle size affects download/bandwidth
+        + efficiency_factor * 0.3  # Complexity affects CPU processing  # Efficiency affects overall resource usage
     )
 
     # Estimate environmental impact
@@ -222,7 +222,7 @@ def calculate_eco_score() -> Dict[str, any]:
 
 def display_eco_report(eco_data: Dict[str, any]) -> None:
     """Display formatted eco impact report.
-    
+
     Args:
         eco_data: Dictionary containing eco metrics and scores
     """
@@ -242,10 +242,10 @@ def display_eco_report(eco_data: Dict[str, any]) -> None:
 
 def assess_eco_quality_gate(score: float) -> int:
     """Assess eco score against quality gates and display results.
-    
+
     Args:
         score: Eco score from 0-100
-        
+
     Returns:
         int: Exit code (0 for pass, 1 for fail)
     """
@@ -269,7 +269,7 @@ def assess_eco_quality_gate(score: float) -> int:
 
 def main():
     """Main eco check function that orchestrates the environmental impact assessment.
-    
+
     Validates environment, calculates eco metrics, displays results,
     and provides optimization recommendations.
     """
@@ -285,7 +285,7 @@ def main():
         # Calculate and display eco metrics
         eco_data = calculate_eco_score()
         display_eco_report(eco_data)
-        
+
         # Assess quality gates and get exit code
         exit_code = assess_eco_quality_gate(eco_data["eco_score"])
 

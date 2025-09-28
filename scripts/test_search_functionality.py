@@ -17,11 +17,11 @@ SEARCH_ENDPOINT = f"{BASE_URL}/search-playlists"
 
 def validate_response_structure(response, query):
     """Validate HTTP response structure and status.
-    
+
     Args:
         response: HTTP response object
         query: Original search query for error messages
-        
+
     Returns:
         tuple: (is_valid, data) where is_valid is bool and data is response JSON
     """
@@ -38,17 +38,17 @@ def validate_response_structure(response, query):
     if not data.get("success"):
         print(f"❌ Search failed: {data.get('error', 'Unknown error')}")
         return False, None
-    
+
     return True, data
 
 
 def validate_result_count(actual_count, expected_count):
     """Validate that actual result count matches expected.
-    
+
     Args:
         actual_count: Number of results received
         expected_count: Number of results expected
-        
+
     Returns:
         bool: True if counts match
     """
@@ -60,17 +60,17 @@ def validate_result_count(actual_count, expected_count):
 
 def validate_specific_moods(data, expected_moods):
     """Validate that specific expected moods are present in results.
-    
+
     Args:
         data: Response data containing moods
         expected_moods: List of mood keys that should be present
-        
+
     Returns:
         bool: True if all expected moods are found
     """
     if not expected_moods:
         return True
-        
+
     actual_moods = [mood["mood_key"] for mood in data.get("moods", [])]
     for expected_mood in expected_moods:
         if expected_mood not in actual_moods:
@@ -81,28 +81,28 @@ def validate_specific_moods(data, expected_moods):
 
 def display_search_results(data):
     """Display formatted search results.
-    
+
     Args:
         data: Response data containing mood results
     """
     actual_count = len(data.get("moods", []))
     print(f"✅ Found {actual_count} result(s)")
-    
+
     for mood in data.get("moods", []):
         print(f"   {mood['icon']} {mood['name']} - {mood['description']}")
 
 
 def test_search(query, expected_count, expected_moods=None):
     """Test playlist search functionality with comprehensive validation.
-    
+
     Sends a POST request to the search endpoint and validates response structure,
     result count, and optionally specific mood presence.
-    
+
     Args:
         query (str): Search query to test
         expected_count (int): Number of results expected
         expected_moods (list, optional): Specific mood names expected in results
-        
+
     Returns:
         bool: True if test passes, False otherwise
     """
@@ -110,7 +110,7 @@ def test_search(query, expected_count, expected_moods=None):
 
     try:
         response = requests.post(SEARCH_ENDPOINT, data={"query": query})
-        
+
         # Validate response structure
         is_valid, data = validate_response_structure(response, query)
         if not is_valid:

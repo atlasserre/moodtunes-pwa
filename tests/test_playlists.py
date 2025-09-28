@@ -36,6 +36,7 @@ import unittest
 
 try:
     import pytest
+
     HAS_PYTEST = True
 except ImportError:
     HAS_PYTEST = False
@@ -54,33 +55,34 @@ from app import mood_playlists, mood_categories, get_time_based_suggestions, get
 
 class TestMoodPlaylists(unittest.TestCase):
     """Comprehensive test suite for MoodTunes playlist functionality.
-    
+
     This test class validates all aspects of the MoodTunes playlist system:
-    
+
     Data Validation Tests:
     - Playlist data structure integrity
     - Spotify URL format and accessibility
     - Mood metadata completeness and consistency
     - Categorization accuracy and coverage
-    
+
     Functional Tests:
     - Time-based mood suggestion algorithms
     - Search functionality across names, descriptions, keywords
     - Display information retrieval and formatting
     - Session-based mood tracking and history
-    
+
     Integration Tests:
     - End-to-end playlist retrieval workflows
     - Cross-component data consistency
     - Error handling and edge case behavior
     - Performance benchmarks for search operations
-    
+
     Quality Assurance:
     - All 15 curated mood playlists are valid
     - Search returns relevant and accurate results
     - Time suggestions align with psychological patterns
     - User experience flows work as expected
     """
+
     """Test comprehensive playlist functionality"""
 
     def test_all_moods_have_valid_playlist_id(self):
