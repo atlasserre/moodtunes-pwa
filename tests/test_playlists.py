@@ -531,7 +531,6 @@ class TestErrorHandlingAndEdgeCases(unittest.TestCase):
     def test_service_worker_endpoint_coverage(self):
         """Test service worker endpoint to cover lines 304-308"""
         from app import app
-        import os
 
         with app.test_client() as client:
             response = client.get("/static/service-worker.js")

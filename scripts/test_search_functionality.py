@@ -5,7 +5,6 @@ Tests both single result and multiple result scenarios
 """
 
 import requests
-import json
 import sys
 from colorama import Fore, Style, init
 
