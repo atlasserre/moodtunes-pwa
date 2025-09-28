@@ -20,6 +20,41 @@
     top: 6px;
 }
 
+/* Version Badge */
+.version-badge {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(102, 126, 234, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: help;
+    transition: all 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.version-badge:hover {
+    background: rgba(102, 126, 234, 0.95);
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Mobile responsiveness for version badge */
+@media (max-width: 768px) {
+    .version-badge {
+        top: 8px;
+        left: 8px;
+        font-size: 0.7rem;
+        padding: 3px 6px;
+    }
+}
+
 .visually-hidden {
     position: absolute !important;
     clip: rect(1px, 1px, 1px, 1px);

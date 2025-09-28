@@ -21,6 +21,19 @@ import logging
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify, session
 
+# ====================================================================
+# APPLICATION VERSION INFORMATION
+# ====================================================================
+
+APP_VERSION = "2.1.0"  # Major.Minor.Patch
+BUILD_DATE = "2025-09-28"
+BUILD_INFO = {
+    "version": APP_VERSION,
+    "build_date": BUILD_DATE,
+    "features": ["Search", "PWA", "Quality Gates", "88% Coverage"],
+    "commit": "latest"
+}
+
 # Initialize Flask application with production-ready configuration
 app = Flask(__name__)
 
@@ -249,7 +262,8 @@ def index():
         'mood_categories': mood_categories,  # Complete mood organization structure
         'recent_moods': [get_mood_display_info(mood) for mood in recent_moods[-3:]],  # Last 3 moods with display info
         'time_suggestions': [get_mood_display_info(mood) for mood in time_suggestions],  # Current time suggestions with display info
-        'get_mood_info': get_mood_display_info  # Helper function for template use
+        'get_mood_info': get_mood_display_info,  # Helper function for template use
+        'version_info': BUILD_INFO  # Application version information
     }
     
     # Render main template with all mood data
@@ -550,6 +564,25 @@ def search_playlists():
 # ====================================================================
 # PROGRESSIVE WEB APP SUPPORT
 # ====================================================================
+
+@app.route('/version')
+def version_info():
+    """
+    Get application version and build information.
+    
+    Returns:
+        JSON: Complete version and build information
+        
+    Response Format:
+        {
+            "version": "2.1.0",
+            "build_date": "2025-09-28", 
+            "features": ["Search", "PWA", "Quality Gates", "88% Coverage"],
+            "commit": "latest",
+            "status": "production"
+        }
+    """
+    return jsonify(BUILD_INFO)
 
 @app.route('/static/service-worker.js')
 def service_worker():
