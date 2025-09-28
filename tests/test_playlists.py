@@ -198,7 +198,7 @@ class TestMoodPlaylists(unittest.TestCase):
     def test_playlist_accessibility(self):
         """
         Test that all playlists are accessible via HTTP requests.
-        
+
         Distinguishes between:
         - Critical failures (404 Not Found) → Test fails
         - Temporary issues (5xx errors, timeouts) → Warning only, test passes
@@ -216,7 +216,7 @@ class TestMoodPlaylists(unittest.TestCase):
                 url = f"https://open.spotify.com/playlist/{playlist_id}"
                 try:
                     response = requests.head(url, timeout=15)
-                    
+
                     if response.status_code in [200, 301, 302]:
                         print(f"✅ {mood}: Accessible (HTTP {response.status_code})")
                     elif response.status_code == 404:
@@ -231,7 +231,7 @@ class TestMoodPlaylists(unittest.TestCase):
                         # Other HTTP errors: Could be temporary redirects, auth issues, etc.
                         warnings.append((mood, playlist_id, f"HTTP {response.status_code} - Unexpected response"))
                         print(f"⚠️  {mood}: WARNING - Unexpected response (HTTP {response.status_code})")
-                        
+
                 except requests.exceptions.Timeout:
                     # Timeout: Temporary network issue - warn but don't fail
                     warnings.append((mood, playlist_id, "Request timeout"))
