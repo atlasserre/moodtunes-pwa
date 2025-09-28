@@ -30,7 +30,7 @@ BUILD_DATE = "2025-09-28"
 BUILD_INFO = {
     "version": APP_VERSION,
     "build_date": BUILD_DATE,
-    "features": ["Search", "PWA", "Quality Gates", "88% Coverage", "Render Fix"],
+    "features": ["Search", "PWA", "Quality Gates", "88% Coverage", "Version Display"],
     "commit": "latest"
 }
 
