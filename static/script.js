@@ -197,7 +197,7 @@ window.closePlayer = closePlayer;
 // =============================================================================
 
 // DOM Elements for search
-const playlistSearchInput = document.getElementById('playlist-search');
+const playlistSearchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-btn');
 const searchResults = document.getElementById('search-results');
 const searchResultsList = document.getElementById('search-results-list');

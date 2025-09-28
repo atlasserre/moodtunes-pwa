@@ -18,5 +18,8 @@ flake8-docstrings==1.7.0  # Docstring linting
 pytest-mock==3.12.0
 pytest-xdist==3.5.0
 
+# Frontend testing
+beautifulsoup4==4.12.2    # HTML parsing for frontend tests
+
 # Fix packaging conflict
 packaging>=22.0

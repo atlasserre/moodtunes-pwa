@@ -340,6 +340,11 @@ jobs:
         echo "🔍 Running search functionality tests..."
         python -m pytest tests/test_playlists.py::TestSearchFunctionality -v --tb=short
         
+    - name: Run frontend integration tests
+      run: |
+        echo "🎨 Running frontend integration tests..."
+        python -m pytest tests/test_frontend.py -v --tb=short
+        
     - name: Test Flask app import
       run: |
         echo "🌐 Testing Flask app..."
