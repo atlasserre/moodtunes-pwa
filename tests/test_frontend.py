@@ -47,9 +47,7 @@ class TestFrontendIntegration(unittest.TestCase):
 
         # Verify button attributes
         self.assertEqual(search_button.get("type"), "button", "Search button should be type='button'")
-        self.assertEqual(
-            search_button.get("class"), ["search-button"], "Search button should have class='search-button'"
-        )
+        self.assertEqual(search_button.get("class"), ["search-button"], "Search button should have class='search-button'")
 
     def test_search_results_container_exists(self):
         """Test that search results container exists"""

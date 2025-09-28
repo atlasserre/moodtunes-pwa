@@ -54,18 +54,14 @@ class TestMoodPlaylists(unittest.TestCase):
         for mood, playlist_id in mood_playlists.items():
             web_url = f"https://open.spotify.com/playlist/{playlist_id}"
             with self.subTest(mood=mood):
-                self.assertTrue(
-                    web_url.startswith("https://open.spotify.com/playlist/"), f"Invalid web URL format for {mood}"
-                )
+                self.assertTrue(web_url.startswith("https://open.spotify.com/playlist/"), f"Invalid web URL format for {mood}")
                 self.assertIn(playlist_id, web_url, f"Playlist ID missing from web URL for {mood}")
 
     def test_mood_count(self):
         """Test that we have the expected number of moods"""
         expected_mood_count = 15
         actual_count = len(mood_playlists)
-        self.assertEqual(
-            actual_count, expected_mood_count, f"Expected {expected_mood_count} moods, but found {actual_count}"
-        )
+        self.assertEqual(actual_count, expected_mood_count, f"Expected {expected_mood_count} moods, but found {actual_count}")
 
     def test_no_duplicate_playlist_ids(self):
         """Test that all playlist IDs are unique"""
@@ -276,9 +272,7 @@ class TestSearchFunctionality(unittest.TestCase):
         for query, expected_moods in partial_tests:
             with self.subTest(query=query):
                 matches = self._search_moods(query)
-                self.assertTrue(
-                    len(matches) >= 1, f"Query '{query}' should return at least 1 result, got {len(matches)}"
-                )
+                self.assertTrue(len(matches) >= 1, f"Query '{query}' should return at least 1 result, got {len(matches)}")
                 for expected_mood in expected_moods:
                     self.assertIn(expected_mood, matches, f"Query '{query}' should include mood '{expected_mood}'")
 
@@ -294,9 +288,7 @@ class TestSearchFunctionality(unittest.TestCase):
         for query, expected_mood in case_tests:
             with self.subTest(query=query):
                 matches = self._search_moods(query)
-                self.assertIn(
-                    expected_mood, matches, f"Case insensitive query '{query}' should find mood '{expected_mood}'"
-                )
+                self.assertIn(expected_mood, matches, f"Case insensitive query '{query}' should find mood '{expected_mood}'")
 
     def _search_moods(self, query):
         """Helper method to simulate search functionality"""
