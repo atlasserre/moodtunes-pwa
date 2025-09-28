@@ -103,7 +103,7 @@ jobs:
         
         # Halstead Complexity
         echo "📐 Halstead Complexity:"
-        radon hal . -nc
+        radon hal .
         
         # Raw Metrics
         echo "📏 Raw Code Metrics:"
