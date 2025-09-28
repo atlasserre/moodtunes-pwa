@@ -3,8 +3,8 @@ services:
     name: moodtunes-pwa
     env: python
     buildCommand: ./build.sh
-    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app --workers 2 --timeout 120
-    # Note: app:app refers to app.py file and the Flask app instance within it
+    startCommand: ./start.sh
+    # Note: start.sh verifies app.py and starts gunicorn app:app
     envVars:
       - key: FLASK_ENV
         value: production
