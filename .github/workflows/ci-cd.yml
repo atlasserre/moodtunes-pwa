@@ -200,54 +200,88 @@ jobs:
                     continue
                     
                 with open(py_file, 'r', encoding='utf-8') as f:
-                    lines = f.readlines()
+                    content = f.read()
+                    lines = content.splitlines()
                     total_lines += len(lines)
                     
-                    in_docstring = False
-                    for line in lines:
-                        stripped = line.strip()
-                        if stripped.startswith('#'):
-                            comment_lines += 1
-                        elif '"""' in stripped or "'''" in stripped:
-                            comment_lines += 1
-                        elif 'def ' in stripped:
-                            total_functions += 1
-                            # Check if next few lines have docstring
-                            # This is a simplified check
+                    # Advanced function docstring detection
+                    import ast
+                    try:
+                        tree = ast.parse(content)
+                        for node in ast.walk(tree):
+                            if isinstance(node, ast.FunctionDef):
+                                total_functions += 1
+                                if (ast.get_docstring(node) is not None and 
+                                    len(ast.get_docstring(node).strip()) > 10):
+                                    docstring_functions += 1
+                    except:
+                        # Fallback to simple regex-based detection
+                        import re
+                        func_pattern = r'def\s+\w+\([^)]*\):'
+                        docstring_pattern = r'^\s*"""[^"]*?"""'
+                        
+                        functions = re.findall(func_pattern, content, re.MULTILINE)
+                        total_functions += len(functions)
+                        
+                        # Simple heuristic: count lines with docstrings
+                        for line in lines:
+                            stripped = line.strip()
+                            if stripped.startswith('#'):
+                                comment_lines += 1
+                            elif ('"""' in stripped or "'''" in stripped) and len(stripped) > 10:
+                                comment_lines += 1
+                                # Assume decent docstrings indicate documented functions
+                                if 'def ' in '\n'.join(lines[max(0, lines.index(line)-5):lines.index(line)]):
+                                    docstring_functions += min(docstring_functions + 1, total_functions)
             
             # Professional documentation scoring approach
             doc_score = 0
+            readme_score = 0
+            external_docs_score = 0
+            function_docs_score = 0
             
             # README Quality Assessment (configurable weight)
             if Path('README.md').exists():
                 readme_size = Path('README.md').stat().st_size
                 if readme_size > 2000:
-                    doc_score += CONFIG['readme_weight']
+                    readme_score = CONFIG['readme_weight']
                 elif readme_size > 500:
-                    doc_score += CONFIG['readme_weight'] * 0.6
+                    readme_score = CONFIG['readme_weight'] * 0.6
                 else:
-                    doc_score += CONFIG['readme_weight'] * 0.3
+                    readme_score = CONFIG['readme_weight'] * 0.3
+                doc_score += readme_score
+                print(f"  📄 README.md size: {readme_size} bytes → {readme_score} points")
             
             # External Documentation Bonus
             external_docs = len(list(Path('.').glob('docs/**/*.md'))) + len(list(Path('.').glob('**/API*.md')))
             if external_docs > 0:
-                doc_score += CONFIG['external_docs_bonus']
+                external_docs_score = CONFIG['external_docs_bonus']
+                doc_score += external_docs_score
+                print(f"  📁 External docs: {external_docs} files → {external_docs_score} points")
             
             # Function Documentation Coverage (professional approach)
             if total_functions > 0:
                 function_doc_ratio = docstring_functions / total_functions
+                print(f"  🔧 Functions: {docstring_functions}/{total_functions} documented ({function_doc_ratio:.2f})")
                 if function_doc_ratio >= CONFIG['min_function_doc_ratio']:
-                    doc_score += 40  # Full points for good function documentation
+                    function_docs_score = 40  # Full points for good function documentation
                 else:
-                    doc_score += function_doc_ratio * 40
+                    function_docs_score = function_doc_ratio * 40
+                doc_score += function_docs_score
+                print(f"  🔧 Function docs score: {function_docs_score} points")
             else:
-                doc_score += 20  # No functions to document
+                function_docs_score = 20  # No functions to document
+                doc_score += function_docs_score
+                print(f"  🔧 No functions found → {function_docs_score} points")
                 
             # Only count comments if enabled (discourage artificial inflation)
+            comment_bonus = 0
             if CONFIG['enable_comment_counting'] and total_lines > 0:
                 comment_bonus = min(10, (comment_lines / total_lines) * 50)
                 doc_score += comment_bonus
+                print(f"  💬 Comment bonus: {comment_bonus} points")
             
+            print(f"  📊 Total Documentation Score: {doc_score}/100")
             quality_metrics['documentation_score'] = min(100, doc_score)
             
         except Exception as e:
