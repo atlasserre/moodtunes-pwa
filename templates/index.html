@@ -71,11 +71,14 @@
             
             <!-- Spotify Playlist Search -->
             <div class="search-section" role="region" aria-labelledby="search-heading">
-                                <h2 class="search-title">
+                <h2 class="search-title">
                     <span role="img" aria-label="magnifying glass">🔍</span> Search Playlists
                 </h2>
                 <div class="search-container">
-                                               placeholder="Try 'workout', 'chill', 'study', or 'jazz'..."
+                    <input type="text" 
+                           id="search-input" 
+                           class="search-input"
+                           placeholder="Try 'workout', 'chill', 'study', or 'jazz'..."
                            aria-label="Search playlists"
                            autocomplete="off">
                     <button type="button" id="search-btn" class="search-button">
