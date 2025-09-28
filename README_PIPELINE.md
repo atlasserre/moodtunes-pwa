@@ -62,7 +62,7 @@ For advanced features, add these secrets in **Settings** → **Secrets and varia
 In your Render dashboard:
 1. **Enable Auto-Deploy** from GitHub
 2. **Set Build Command**: `pip install -r requirements.txt`
-3. **Set Start Command**: `gunicorn --bind 0.0.0.0:$PORT app_production:app`
+3. **Set Start Command**: `gunicorn --bind 0.0.0.0:$PORT app:app`
 
 ---
 
@@ -125,7 +125,7 @@ pip install -r requirements-dev.txt
 python -m pytest test_playlists.py -v
 
 # With coverage
-python -m pytest test_playlists.py --cov=app_production --cov-report=html
+python -m pytest tests/test_playlists.py --cov=app --cov-report=html
 
 # Code formatting
 black --check .

@@ -1,144 +1,129 @@
-# MoodTunes 🎵
+# 🎵 MoodTunes PWA
 
-A simple Flask web application that matches your current mood to curated Spotify playlists.
+> **Your Personal Music Mood Companion** -## 📚 Documentation
 
-## Features
+📖 **[Complete Documentation](docs/README.md)** - Comprehensive guide covering:
+- Development setup and project structure
+- Deployment instructions and security
+- Testing and CI/CD pipeline  
+- Search functionality and customization
+- PWA features and mobile setup
+- Troubleshooting and monitoring
 
-- **Mood Selection**: Choose from 15 different moods covering various emotional states and activities
-- **Smart Suggestions**: Time-based mood recommendations that adapt to your daily routine
-- **Recent Moods**: Quick access to your last 3 selected moods for easy replay
-- **Organized Categories**: Moods grouped by Emotional, Energy & Activity, and Mental State
-- **Spotify Integration**: Embedded Spotify player for immediate playlist access
-- **Responsive Design**: Clean, user-friendly interface with full accessibility support
-- **Real-time Loading**: Visual feedback during playlist loading
+🔍 **[Search Integration Guide](docs/SEARCH_CI_CD_INTEGRATION.md)** - Technical details on search functionality and automated testing
 
-## Setup
+🛡️ **[Quality Gates Guide](docs/QUALITY_GATES_GUIDE.md)** - Complete quality assurance system covering:
+- Code quality thresholds and scoring
+- Environmental impact assessment (Eco Score)
+- Accessibility compliance checking
+- Security and performance gates
+- Local development quality tools
 
-### Prerequisites
-- Python 3.7 or higher
-- Internet connection for Spotify embeds
+📊 **[Quality Gates Summary](docs/QUALITY_GATES_SUMMARY.md)** - Implementation status and next stepsive Web App that curates Spotify playlists based on your current mood.
 
-### Installation
+![MoodTunes Demo](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![Python](https://img.shields.io/badge/Python-3.9+-blue) ![PWA](https://img.shields.io/badge/PWA-Ready-purple)
 
-1. Clone or download the project to your local machine
-2. Navigate to the project directory:
-   ```bash
-   cd MoodTunes
-   ```
+## ✨ Features
 
-3. Install required dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+🎵 **15 Curated Mood Playlists** - From happy hits to deep focus music  
+🔍 **Smart Search** - Find playlists with keywords like "workout", "chill", "focus"  
+📱 **Progressive Web App** - Install on your phone like a native app  
+⏰ **Time-Based Suggestions** - Smart recommendations based on time of day  
+🎯 **Recent History** - Quick access to recently played moods  
+🌐 **Offline Ready** - Core functionality works without internet  
 
-### Running the Application
+## 🚀 Quick Start
 
-#### Option 1: Using the batch file (Windows)
-Double-click `start_moodtunes.bat` or run it from command line.
-
-#### Option 2: Direct Python execution
 ```bash
+# Clone and setup
+git clone https://github.com/atlasserre/moodtunes-pwa.git
+cd moodtunes-pwa
+
+# Install and run
+pip install -r requirements.txt
 python app.py
+
+# Visit: http://localhost:5000
 ```
 
-The application will start on `http://localhost:5000`
+## 🎯 Mood Categories
 
-## Usage
+- **😊 Emotional** - Happy, Sad, Romantic, Angry, Uplifting, Nostalgic, Melancholy
+- **⚡ Energy & Activity** - Energetic, Motivated, Party, Running, Chill  
+- **🧠 Mental State** - Focused, Meditative, Sleepy
 
-1. Open your web browser and go to `http://localhost:5000`
-2. **Quick Selection**: Click on time-based suggestions or recent moods for instant access
-3. **Browse Categories**: Use the organized dropdown menu to explore all 15 moods
-4. Wait for the playlist to load in the embedded player
-5. Enjoy your personalized music experience!
-6. Use the "Close Player" button to hide the player when done
+## 🔍 Smart Search
 
-### Smart Features
+Try searching for:
+- **Single Results**: "happy", "study", "workout", "meditation"  
+- **Multiple Options**: "positive", "calm", "peaceful", "inspiring"
 
-**🕐 Time-Based Suggestions**: The app automatically suggests moods based on the current time:
-- **Morning (6-9 AM)**: Uplifting, Motivated, Energetic
-- **Late Morning (9AM-12PM)**: Focused, Motivated, Happy
-- **Lunch (12-2 PM)**: Chill, Happy, Uplifting
-- **Afternoon (2-5 PM)**: Focused, Energetic, Motivated
-- **Evening (5-8 PM)**: Chill, Happy, Party
-- **Night (8-10 PM)**: Romantic, Chill, Nostalgic
-- **Late Night (10PM-6AM)**: Sleepy, Meditative, Chill
+## 📱 PWA Installation
 
-**🔄 Recent Moods**: Your last 3 mood selections are saved and displayed for quick access
+1. Visit the app on mobile
+2. Tap "Add to Home Screen" 
+3. Install and enjoy native app experience!
 
-## Project Structure
+## 🧪 Testing
 
-```
-MoodTunes/
-├── app.py              # Main Flask application
-├── requirements.txt    # Python dependencies
-├── start_moodtunes.bat # Windows batch file for easy startup
-├── static/
-│   ├── style.css      # Application styles
-│   └── script.js      # JavaScript functionality
-└── templates/
-    └── index.html     # Main HTML template
+```bash
+# Install test dependencies
+pip install -r requirements-dev.txt
+
+# Run tests
+python -m pytest tests/ -v --cov=app
 ```
 
-## Playlist Sources
+## 🚀 Deployment
 
-All playlists are curated Spotify playlists:
+**Render.com** (One-click deploy):
+- Build: `pip install -r requirements.txt`
+- Start: `python app.py`
+- Set `SECRET_KEY` environment variable
 
-### **Original Moods**
-- **😊 Happy**: Happy Hits
-- **😢 Sad**: Sad Songs  
-- **💪 Energetic**: Beast Mode
-- **😌 Chill**: Lofi Chill
-- **❤️ Romantic**: Love Pop
+## � Documentation
 
-### **New Mood Additions**
-- **🔥 Motivated**: Beast Mode (Workout)
-- **😴 Sleepy**: Sleep
-- **🤔 Focused**: Deep Focus
-- **🎉 Party**: Pop Rising
-- **😌 Nostalgic**: All Out 2010s
-- **😠 Angry**: Heavy Metal
-- **🌧️ Melancholy**: Atmospheric Calm
-- **☀️ Uplifting**: Good Vibes
-- **🧘 Meditative**: Peaceful Piano
-- **🏃 Running**: Power Workout
+📖 **[Complete Documentation](docs/README.md)** - Comprehensive guide covering:
+- Development setup and project structure
+- Deployment instructions and security
+- Testing and CI/CD pipeline  
+- Search functionality and customization
+- PWA features and mobile setup
+- Troubleshooting and monitoring
 
-## Technical Notes
+🔍 **[Search Integration Guide](docs/SEARCH_CI_CD_INTEGRATION.md)** - Technical details on search functionality and automated testing
 
-- Built with Flask framework
-- Progressive Web App (PWA) with offline support
-- Uses Spotify's embedded player (no API key required)
-- Includes error handling and input validation
-- Logging enabled for debugging purposes
-- Full accessibility compliance (WCAG 2.1 AA)
-- Mobile-optimized with service worker caching
+## � Tech Stack
 
-## 📱 Mobile App Installation
+- **Backend**: Flask (Python)
+- **Frontend**: HTML5, CSS3, JavaScript  
+- **PWA**: Service Worker, Web App Manifest
+- **Testing**: pytest with comprehensive coverage
+- **CI/CD**: GitHub Actions with automated quality checks
+- **Deployment**: Render.com ready
 
-**Your MoodTunes app can be installed on Android phones like a native app!**
+## 📊 Quality Assurance
 
-### Quick Setup:
-1. **Start the app**: `python app.py`
-2. **Find your IP**: `ipconfig | findstr IPv4`
-3. **On Android**: Open `http://YOUR_IP:5000` in Chrome
-4. **Install**: Tap the install prompt or "Add to Home screen"
+✅ **5-Tier Quality Gates** - Code quality, eco score, accessibility, testing, performance  
+✅ **Environmental Impact** - CO2 tracking and energy optimization (1.8g CO2 per 1K visits)  
+✅ **Accessibility Compliance** - WCAG 2.1 AA standards with automated testing  
+✅ **Security Hardening** - Vulnerability scanning and secure coding practices  
+✅ **Production Ready** - Comprehensive quality gates prevent bad deployments  
 
-📋 **Detailed instructions**: See `MOBILE_SETUP.md`
+## 🤝 Contributing
 
-### PWA Features:
-- 🏠 **Home screen icon** - Launch like any app
-- 📱 **Standalone mode** - No browser interface
-- 🔄 **Offline support** - Works without internet
-- ⚡ **App shortcuts** - Quick access to favorite moods
-- 🎯 **Touch optimized** - Perfect mobile experience
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/name`)
+3. Add tests for new functionality
+4. Ensure all tests pass (`python -m pytest tests/`)
+5. Submit pull request
 
-## Troubleshooting
+## 📜 License
 
-- **Playlist won't load**: Check your internet connection
-- **Server won't start**: Ensure Flask is installed (`pip install flask`)
-- **Port already in use**: Flask will automatically find an available port
-- **PWA won't install**: Ensure icons exist in `/static/icons/` folder
-- **Can't access from phone**: Check same WiFi network and firewall settings
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-*Created as a personal mood-music matching tool with mobile PWA support* 🎼📱
+**Made with ❤️ for music lovers everywhere** 🎵
+
+*Turn your mood into music, instantly.*

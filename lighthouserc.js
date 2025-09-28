@@ -3,7 +3,7 @@ module.exports = {
   ci: {
     collect: {
       url: ["http://localhost:5000"],
-      startServerCommand: "python app_production.py",
+      startServerCommand: "python app.py",
       startServerReadyPattern: "Running on",
       startServerReadyTimeout: 30000
     },

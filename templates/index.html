@@ -64,6 +64,29 @@
             </div>
             {% endif %}
             
+            <!-- Spotify Playlist Search -->
+            <div class="search-section" role="region" aria-labelledby="search-heading">
+                                <h2 class="search-title">
+                    <span role="img" aria-label="magnifying glass">🔍</span> Search Playlists
+                </h2>
+                <div class="search-container">
+                                               placeholder="Try 'workout', 'chill', 'study', or 'jazz'..."
+                           aria-label="Search playlists"
+                           autocomplete="off">
+                    <button type="button" id="search-btn" class="search-button">
+                        <span role="img" aria-label="search">🔍</span> Search
+                    </button>
+                </div>
+                
+                <!-- Search Results -->
+                <div id="search-results" class="search-results" style="display: none;">
+                    <div id="search-loading" class="loading-message" style="display: none;">
+                        <span role="img" aria-label="searching">🎵</span> Searching Spotify...
+                    </div>
+                    <div id="search-results-list" class="results-grid"></div>
+                </div>
+            </div>
+            
             <form method="POST" id="moodForm" role="form" aria-label="Mood selection form">
                 <fieldset>
                     <legend class="visually-hidden">Select your current mood</legend>

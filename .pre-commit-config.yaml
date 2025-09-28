@@ -1,0 +1,94 @@
+# Pre-commit Quality Gates Configuration
+# Install: pip install pre-commit && pre-commit install
+# Run: pre-commit run --all-files
+
+repos:
+  # Code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        name: 🖤 Code Formatting (Black)
+        language_version: python3
+
+  # Code linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        name: 🔍 Code Linting (Flake8)
+        additional_dependencies: [flake8-docstrings]
+
+  # Security scanning
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.8
+    hooks:
+      - id: bandit
+        name: 🔒 Security Scan (Bandit)
+        args: ['-r', '.', '-f', 'json', '-o', 'bandit-report.json']
+        pass_filenames: false
+
+  # Import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: 📦 Import Sorting (isort)
+        args: ["--profile", "black"]
+
+  # YAML validation
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+        name: 📄 YAML Validation
+      - id: check-json
+        name: 📋 JSON Validation
+      - id: trailing-whitespace
+        name: ✂️ Trailing Whitespace
+      - id: end-of-file-fixer
+        name: 📝 End of File Fixer
+
+  # Custom quality checks
+  - repo: local
+    hooks:
+      - id: complexity-check
+        name: 🔄 Complexity Check
+        entry: bash -c 'radon cc . -nc --min C && echo "✅ Complexity check passed"'
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: maintainability-check
+        name: 🔧 Maintainability Check
+        entry: bash -c 'radon mi . -nc --min B && echo "✅ Maintainability check passed"'
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: test-coverage-check
+        name: 🧪 Test Coverage Check
+        entry: bash -c 'python -m pytest tests/ --cov=app --cov-fail-under=80 -q && echo "✅ Test coverage check passed"'
+        language: system
+        pass_filenames: false
+
+      - id: eco-impact-check
+        name: 🌱 Eco Impact Check
+        entry: bash -c 'python scripts/eco_check.py && echo "✅ Eco impact check passed"'
+        language: system
+        pass_filenames: false
+
+# Configuration
+default_language_version:
+  python: python3
+
+# Skip certain hooks for specific files
+exclude: |
+  (?x)^(
+    __pycache__/.*|
+    \.git/.*|
+    \.pytest_cache/.*|
+    htmlcov/.*|
+    .*\.json$|
+    .*\.md$
+  )$

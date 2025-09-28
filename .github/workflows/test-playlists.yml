@@ -4,14 +4,16 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'app_production.py'
-      - 'test_playlists.py'
+      - 'app.py'
+      - 'tests/test_playlists.py'
       - 'requirements*.txt'
-  pull_request:
+  pu        from app import mood_playlists, mood_metadata
+        
+        print('\n🔍 Search Functionality Analysis')l_request:
     branches: [ main ]
     paths:
-      - 'app_production.py'
-      - 'test_playlists.py'
+      - 'app.py'
+      - 'tests/test_playlists.py'
       - 'requirements*.txt'
   schedule:
     # Run playlist validation daily at 2 AM UTC
@@ -40,18 +42,23 @@ jobs:
     - name: Run playlist validation tests
       run: |
         echo "🎵 Validating all 15 mood playlists..."
-        python -m pytest test_playlists.py::TestMoodPlaylists -v --tb=short
+        python -m pytest tests/test_playlists.py::TestMoodPlaylists -v --tb=short
+        
+    - name: Run search functionality tests
+      run: |
+        echo "🔍 Validating search functionality..."
+        python -m pytest tests/test_playlists.py::TestSearchFunctionality -v --tb=short
         
     - name: Run integration tests
       run: |
         echo "🔗 Running playlist integration tests..."
-        python -m pytest test_playlists.py::TestPlaylistIntegration -v --tb=short
+        python -m pytest tests/test_playlists.py::TestPlaylistIntegration -v --tb=short
         
     - name: Validate playlist accessibility
       run: |
         echo "🌐 Testing playlist accessibility..."
         python -c "
-        from app_production import mood_playlists
+        from app import mood_playlists
         import requests
         import time
         
@@ -83,7 +90,7 @@ jobs:
       run: |
         echo "📊 Generating playlist report..."
         python -c "
-        from app_production import mood_playlists, mood_categories
+        from app import mood_playlists, mood_categories
         
         print('\\n🎵 MoodTunes Playlist Report')
         print('=' * 40)
@@ -122,7 +129,7 @@ jobs:
       run: |
         echo "📈 Analyzing mood coverage and categories..."
         python -c "
-        from app_production import mood_playlists, mood_categories, get_time_based_suggestions
+        from app import mood_playlists, mood_categories, get_time_based_suggestions
         from collections import Counter
         import json
         
@@ -155,4 +162,64 @@ jobs:
         print(f'  Time suggestion coverage: {time_coverage:.1f}%')
         print(f'  Average category size: {len(mood_playlists) / len(mood_categories):.1f} moods')
         print(f'  Total playlist variety: {len(set(mood_playlists.values()))} unique playlists')
+        "
+        
+    - name: Test search functionality coverage
+      run: |
+        echo "🔍 Testing search functionality coverage..."
+        python -c "
+        from app import mood_playlists, mood_metadata
+        
+        print('\\n🔍 Search Functionality Analysis')
+        print('=' * 40)
+        
+        # Test keyword coverage
+        total_keywords = 0
+        mood_keyword_count = {}
+        
+        for mood_key, metadata in mood_metadata.items():
+            keyword_count = len(metadata.get('keywords', []))
+            mood_keyword_count[mood_key] = keyword_count
+            total_keywords += keyword_count
+        
+        print(f'Total search keywords: {total_keywords}')
+        print(f'Average keywords per mood: {total_keywords / len(mood_metadata):.1f}')
+        print()
+        
+        # Test search scenarios
+        test_scenarios = [
+            ('Single result queries', ['happy', 'study', 'workout', 'meditation']),
+            ('Multiple result queries', ['positive', 'calm', 'peaceful', 'inspiring']),
+            ('No result queries', ['xyz123', 'coding', 'invalid'])
+        ]
+        
+        for scenario_name, queries in test_scenarios:
+            print(f'{scenario_name}:')
+            for query in queries:
+                matches = []
+                query_lower = query.lower()
+                
+                for mood_key, playlist_id in mood_playlists.items():
+                    mood_info = mood_metadata.get(mood_key, {})
+                    
+                    if (query_lower in mood_key.lower() or
+                        query_lower in mood_info.get('name', '').lower() or 
+                        query_lower in mood_info.get('description', '').lower() or
+                        any(query_lower in keyword.lower() for keyword in mood_info.get('keywords', []))):
+                        matches.append(mood_key)
+                
+                print(f'  {query}: {len(matches)} result(s) - {matches}')
+            print()
+        
+        # Keyword distribution by category
+        from collections import defaultdict
+        category_keywords = defaultdict(int)
+        
+        for mood_key, metadata in mood_metadata.items():
+            category = metadata.get('category', 'Other')
+            category_keywords[category] += len(metadata.get('keywords', []))
+        
+        print('📊 Keywords by Category:')
+        for category, count in sorted(category_keywords.items()):
+            print(f'  {category}: {count} keywords')
         "

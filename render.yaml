@@ -3,7 +3,7 @@ services:
     name: moodtunes-pwa
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT app_production:app --workers 2 --timeout 120
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app --workers 2 --timeout 120
     envVars:
       - key: FLASK_ENV
         value: production
