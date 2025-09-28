@@ -93,13 +93,16 @@ def display_search_results(data):
         print(f"   {mood['icon']} {mood['name']} - {mood['description']}")
 
 
-@pytest.mark.parametrize("query,expected_count,expected_moods", [
-    ("energetic", 1, ["energetic"]),
-    ("calm", 1, ["calm"]),
-    ("focus", 1, ["focus"]),
-    ("party", 1, ["party"]),
-    ("xyz", 0, None),
-])
+@pytest.mark.parametrize(
+    "query,expected_count,expected_moods",
+    [
+        ("energetic", 1, ["energetic"]),
+        ("calm", 1, ["calm"]),
+        ("focus", 1, ["focus"]),
+        ("party", 1, ["party"]),
+        ("xyz", 0, None),
+    ],
+)
 def test_search(query, expected_count, expected_moods):
     """Test playlist search functionality with comprehensive validation.
 
