@@ -6,6 +6,7 @@ Tests both single result and multiple result scenarios
 
 import requests
 import sys
+import pytest
 from colorama import Fore, Style, init
 
 # Initialize colorama for colored output
@@ -92,7 +93,14 @@ def display_search_results(data):
         print(f"   {mood['icon']} {mood['name']} - {mood['description']}")
 
 
-def test_search(query, expected_count, expected_moods=None):
+@pytest.mark.parametrize("query,expected_count,expected_moods", [
+    ("energetic", 1, ["energetic"]),
+    ("calm", 1, ["calm"]),
+    ("focus", 1, ["focus"]),
+    ("party", 1, ["party"]),
+    ("xyz", 0, None),
+])
+def test_search(query, expected_count, expected_moods):
     """Test playlist search functionality with comprehensive validation.
 
     Sends a POST request to the search endpoint and validates response structure,
