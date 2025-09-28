@@ -1,8 +1,41 @@
+"""
+Comprehensive Test Suite for MoodTunes Playlist Functionality
+
+This module contains extensive unit and integration tests for the MoodTunes PWA
+playlist system, covering:
+
+Core Features:
+- Playlist data structure validation
+- Mood categorization and metadata
+- Time-based mood suggestion algorithms  
+- Search functionality across multiple fields
+- Spotify URL generation and validation
+- Session-based mood tracking
+
+Test Categories:
+- Unit tests for individual functions and data structures
+- Integration tests for end-to-end playlist workflows
+- Validation tests for data integrity and format
+- Performance tests for search response times
+- Error handling tests for edge cases
+
+Dependencies:
+- unittest: Standard Python testing framework
+- pytest: Enhanced testing with fixtures and marks (optional)
+- app: Main MoodTunes application module
+
+Test Coverage:
+- All mood playlist data structures
+- Search algorithms and fuzzy matching
+- Time-based recommendation logic
+- URL generation and Spotify integration
+- Error handling and edge cases
+"""
+
 import unittest
 
 try:
     import pytest
-
     HAS_PYTEST = True
 except ImportError:
     HAS_PYTEST = False
@@ -20,6 +53,34 @@ from app import mood_playlists, mood_categories, get_time_based_suggestions, get
 
 
 class TestMoodPlaylists(unittest.TestCase):
+    """Comprehensive test suite for MoodTunes playlist functionality.
+    
+    This test class validates all aspects of the MoodTunes playlist system:
+    
+    Data Validation Tests:
+    - Playlist data structure integrity
+    - Spotify URL format and accessibility
+    - Mood metadata completeness and consistency
+    - Categorization accuracy and coverage
+    
+    Functional Tests:
+    - Time-based mood suggestion algorithms
+    - Search functionality across names, descriptions, keywords
+    - Display information retrieval and formatting
+    - Session-based mood tracking and history
+    
+    Integration Tests:
+    - End-to-end playlist retrieval workflows
+    - Cross-component data consistency
+    - Error handling and edge case behavior
+    - Performance benchmarks for search operations
+    
+    Quality Assurance:
+    - All 15 curated mood playlists are valid
+    - Search returns relevant and accurate results
+    - Time suggestions align with psychological patterns
+    - User experience flows work as expected
+    """
     """Test comprehensive playlist functionality"""
 
     def test_all_moods_have_valid_playlist_id(self):

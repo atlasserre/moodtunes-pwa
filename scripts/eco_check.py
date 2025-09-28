@@ -77,22 +77,15 @@ def analyze_code_efficiency() -> Dict[str, float]:
     return metrics
 
 
-def calculate_eco_score() -> Dict[str, any]:
-    """Calculate environmental impact score."""
-    print("🌱 Calculating environmental impact...")
-
-    # 1. Bundle size analysis
-    bundle_size_kb = calculate_bundle_size()
-    print(f"📦 Total bundle size: {bundle_size_kb:.1f} KB")
-
-    # 2. Code efficiency analysis
-    code_metrics = analyze_code_efficiency()
-    print(f"📄 Total code lines: {code_metrics['total_lines']}")
-
-    # 3. Complexity analysis (simplified)
+def get_complexity_metrics() -> float:
+    """Analyze code complexity using radon.
+    
+    Returns:
+        float: Average cyclomatic complexity across all functions
+    """
     complexity_output, _, complexity_rc = run_command("radon cc . -a -nc --json")
     avg_complexity = 5.0  # Default assumption
-
+    
     try:
         if complexity_rc == 0 and complexity_output.strip():
             complexity_data = json.loads(complexity_output)
@@ -111,44 +104,99 @@ def calculate_eco_score() -> Dict[str, any]:
 
     except Exception as e:
         print(f"⚠️  Complexity analysis failed: {e}")
+    
+    return avg_complexity
 
+
+def calculate_bundle_factor(bundle_size_kb: float) -> float:
+    """Calculate bundle size eco factor score.
+    
+    Args:
+        bundle_size_kb: Bundle size in kilobytes
+        
+    Returns:
+        float: Score from 0-100 (higher is better)
+    """
+    if bundle_size_kb <= 200:  # Under 200KB is excellent
+        return 100
+    elif bundle_size_kb <= 500:  # Under 500KB is good
+        return 80 - ((bundle_size_kb - 200) / 300) * 30
+    elif bundle_size_kb <= 1000:  # Under 1MB is acceptable
+        return 50 - ((bundle_size_kb - 500) / 500) * 30
+    else:  # Over 1MB is poor
+        return max(0, 20 - ((bundle_size_kb - 1000) / 500) * 10)
+
+
+def calculate_complexity_factor(avg_complexity: float) -> float:
+    """Calculate complexity eco factor score.
+    
+    Args:
+        avg_complexity: Average cyclomatic complexity
+        
+    Returns:
+        float: Score from 0-100 (higher is better)
+    """
+    if avg_complexity <= 3:
+        return 100
+    elif avg_complexity <= 5:
+        return 80 - ((avg_complexity - 3) / 2) * 30
+    elif avg_complexity <= 10:
+        return 50 - ((avg_complexity - 5) / 5) * 30
+    else:
+        return max(0, 20 - ((avg_complexity - 10) / 5) * 10)
+
+
+def calculate_efficiency_factor(total_lines: int, bundle_size_kb: float) -> float:
+    """Calculate code efficiency factor score.
+    
+    Args:
+        total_lines: Total lines of code
+        bundle_size_kb: Bundle size in kilobytes
+        
+    Returns:
+        float: Score from 0-100 (higher is better)
+    """
+    lines_per_kb = total_lines / max(bundle_size_kb, 1)
+    if lines_per_kb >= 50:  # Dense, efficient code
+        return 100
+    elif lines_per_kb >= 30:
+        return 80
+    else:
+        return 60
+
+
+def calculate_eco_score() -> Dict[str, any]:
+    """Calculate comprehensive environmental impact score for the application.
+    
+    Analyzes multiple factors that contribute to environmental impact:
+    - Bundle size (affects download time and bandwidth usage)
+    - Code complexity (affects CPU processing requirements) 
+    - Code efficiency (lines of code per KB of bundle size)
+    
+    Returns:
+        Dict[str, any]: Dictionary containing eco metrics and overall score
+    """
+    print("🌱 Calculating environmental impact...")
+
+    # Gather core metrics
+    bundle_size_kb = calculate_bundle_size()
+    code_metrics = analyze_code_efficiency()
+    avg_complexity = get_complexity_metrics()
+    
+    print(f"📦 Total bundle size: {bundle_size_kb:.1f} KB")
+    print(f"📄 Total code lines: {code_metrics['total_lines']}")
     print(f"🔄 Average complexity: {avg_complexity:.1f}")
 
-    # Calculate eco factors
-    # Bundle size factor (0-100, higher is better)
-    if bundle_size_kb <= 200:  # Under 200KB is excellent
-        bundle_factor = 100
-    elif bundle_size_kb <= 500:  # Under 500KB is good
-        bundle_factor = 80 - ((bundle_size_kb - 200) / 300) * 30
-    elif bundle_size_kb <= 1000:  # Under 1MB is acceptable
-        bundle_factor = 50 - ((bundle_size_kb - 500) / 500) * 30
-    else:  # Over 1MB is poor
-        bundle_factor = max(0, 20 - ((bundle_size_kb - 1000) / 500) * 10)
+    # Calculate individual eco factors
+    bundle_factor = calculate_bundle_factor(bundle_size_kb)
+    complexity_factor = calculate_complexity_factor(avg_complexity)
+    efficiency_factor = calculate_efficiency_factor(code_metrics['total_lines'], bundle_size_kb)
 
-    # Complexity factor (0-100, higher is better)
-    if avg_complexity <= 3:
-        complexity_factor = 100
-    elif avg_complexity <= 5:
-        complexity_factor = 80 - ((avg_complexity - 3) / 2) * 30
-    elif avg_complexity <= 10:
-        complexity_factor = 50 - ((avg_complexity - 5) / 5) * 30
-    else:
-        complexity_factor = max(0, 20 - ((avg_complexity - 10) / 5) * 10)
-
-    # Lines of code factor (efficiency)
-    lines_per_kb = code_metrics["total_lines"] / max(bundle_size_kb, 1)
-    if lines_per_kb >= 50:  # Dense, efficient code
-        efficiency_factor = 100
-    elif lines_per_kb >= 30:
-        efficiency_factor = 80
-    else:
-        efficiency_factor = 60
-
-    # Calculate weighted eco score
+    # Calculate weighted eco score (bundle size has highest impact)
     eco_score = (
-        bundle_factor * 0.4
-        + complexity_factor * 0.3  # Bundle size is most important
-        + efficiency_factor * 0.3  # Code complexity affects processing  # Code efficiency
+        bundle_factor * 0.4 +      # Bundle size affects download/bandwidth
+        complexity_factor * 0.3 +  # Complexity affects CPU processing
+        efficiency_factor * 0.3    # Efficiency affects overall resource usage
     )
 
     # Estimate environmental impact
@@ -172,52 +220,74 @@ def calculate_eco_score() -> Dict[str, any]:
     }
 
 
+def display_eco_report(eco_data: Dict[str, any]) -> None:
+    """Display formatted eco impact report.
+    
+    Args:
+        eco_data: Dictionary containing eco metrics and scores
+    """
+    print("\n📊 ECO IMPACT REPORT")
+    print("=" * 25)
+    print(f"🌱 Eco Score:           {eco_data['eco_score']:.1f}/100")
+    print(f"📦 Bundle Size:         {eco_data['bundle_size_kb']:.1f} KB")
+    print(f"🔄 Avg Complexity:      {eco_data['avg_complexity']:.1f}")
+    print(f"⚡ Energy (per 1K visits): {eco_data['energy_per_1000_visits']:.3f} kWh")
+    print(f"🌍 CO2 (per 1K visits):   {eco_data['co2_per_1000_visits']:.3f} g")
+
+    print(f"\n📈 Factor Breakdown:")
+    print(f"  📦 Bundle Factor:     {eco_data['factors']['bundle_factor']:.1f}/100")
+    print(f"  🔄 Complexity Factor: {eco_data['factors']['complexity_factor']:.1f}/100")
+    print(f"  ⚡ Efficiency Factor: {eco_data['factors']['efficiency_factor']:.1f}/100")
+
+
+def assess_eco_quality_gate(score: float) -> int:
+    """Assess eco score against quality gates and display results.
+    
+    Args:
+        score: Eco score from 0-100
+        
+    Returns:
+        int: Exit code (0 for pass, 1 for fail)
+    """
+    if score >= 80:
+        print(f"\n✅ ECO CHECK PASSED (Excellent - {score:.1f}/100)")
+        print("🌱 Your app has minimal environmental impact!")
+        return 0
+    elif score >= 70:
+        print(f"\n✅ ECO CHECK PASSED (Good - {score:.1f}/100)")
+        print("🌱 Good environmental impact with room for optimization.")
+        return 0
+    elif score >= 60:
+        print(f"\n⚠️  ECO CHECK WARNING (Moderate - {score:.1f}/100)")
+        print("🌱 Environmental impact is acceptable but could be improved.")
+        return 0  # Warning, but don't fail
+    else:
+        print(f"\n❌ ECO CHECK FAILED (Poor - {score:.1f}/100)")
+        print("🌱 High environmental impact detected!")
+        return 1
+
+
 def main():
-    """Main eco check function."""
+    """Main eco check function that orchestrates the environmental impact assessment.
+    
+    Validates environment, calculates eco metrics, displays results,
+    and provides optimization recommendations.
+    """
     print("🌱 MoodTunes PWA - Eco Impact Check")
     print("=" * 40)
 
-    # Check if we're in the right directory
+    # Validate execution environment
     if not Path("app.py").exists():
         print("❌ Error: app.py not found. Run from project root directory.")
         sys.exit(1)
 
     try:
-        # Calculate eco score
+        # Calculate and display eco metrics
         eco_data = calculate_eco_score()
-
-        # Display results
-        print("\n📊 ECO IMPACT REPORT")
-        print("=" * 25)
-        print(f"🌱 Eco Score:           {eco_data['eco_score']:.1f}/100")
-        print(f"📦 Bundle Size:         {eco_data['bundle_size_kb']:.1f} KB")
-        print(f"🔄 Avg Complexity:      {eco_data['avg_complexity']:.1f}")
-        print(f"⚡ Energy (per 1K visits): {eco_data['energy_per_1000_visits']:.3f} kWh")
-        print(f"🌍 CO2 (per 1K visits):   {eco_data['co2_per_1000_visits']:.3f} g")
-
-        print(f"\n📈 Factor Breakdown:")
-        print(f"  📦 Bundle Factor:     {eco_data['factors']['bundle_factor']:.1f}/100")
-        print(f"  🔄 Complexity Factor: {eco_data['factors']['complexity_factor']:.1f}/100")
-        print(f"  ⚡ Efficiency Factor: {eco_data['factors']['efficiency_factor']:.1f}/100")
-
-        # Quality gate assessment
-        score = eco_data["eco_score"]
-        if score >= 80:
-            print(f"\n✅ ECO CHECK PASSED (Excellent - {score:.1f}/100)")
-            print("🌱 Your app has minimal environmental impact!")
-            exit_code = 0
-        elif score >= 70:
-            print(f"\n✅ ECO CHECK PASSED (Good - {score:.1f}/100)")
-            print("🌱 Good environmental impact with room for optimization.")
-            exit_code = 0
-        elif score >= 60:
-            print(f"\n⚠️  ECO CHECK WARNING (Moderate - {score:.1f}/100)")
-            print("🌱 Environmental impact is acceptable but could be improved.")
-            exit_code = 0  # Warning, but don't fail
-        else:
-            print(f"\n❌ ECO CHECK FAILED (Poor - {score:.1f}/100)")
-            print("🌱 High environmental impact detected!")
-            exit_code = 1
+        display_eco_report(eco_data)
+        
+        # Assess quality gates and get exit code
+        exit_code = assess_eco_quality_gate(eco_data["eco_score"])
 
         # Provide optimization recommendations
         if score < 80:

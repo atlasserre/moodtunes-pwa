@@ -4,15 +4,23 @@ MoodTunes PWA - Your Personal Music Mood Companion
 A Flask-based Progressive Web Application that curates Spotify playlists
 based on your current mood. Features include:
 
-- 15 curated mood-based playlists
+- 15 curated mood-based playlists with 20+ songs each
 - Smart search functionality with keyword matching
-- Time-based mood suggestions
-- Recent mood tracking via sessions
-- Progressive Web App capabilities
+- Time-based mood suggestions based on current hour
+- Recent mood tracking via Flask sessions
+- Progressive Web App capabilities with offline support
 - Production-ready security configurations
+- RESTful API endpoints for playlist data
+- Responsive design for mobile and desktop
+
+Technical Stack:
+- Flask 3.0.0 with SQLAlchemy for data persistence
+- HTML5, CSS3, JavaScript for frontend
+- Service Worker for PWA functionality
+- Gunicorn for production deployment
 
 Author: MoodTunes Team
-Version: 2.0.0
+Version: 2.1.2
 License: MIT
 """
 
