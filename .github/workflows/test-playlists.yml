@@ -7,9 +7,7 @@ on:
       - 'app.py'
       - 'tests/test_playlists.py'
       - 'requirements*.txt'
-  pu        from app import mood_playlists, mood_metadata
-        
-        print('\n🔍 Search Functionality Analysis')l_request:
+  pull_request:
     branches: [ main ]
     paths:
       - 'app.py'

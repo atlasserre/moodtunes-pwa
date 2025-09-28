@@ -25,7 +25,7 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
         
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
@@ -59,7 +59,7 @@ jobs:
         bandit -r . -f json -o bandit-report.json || echo "Bandit scan completed"
         
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-reports
@@ -290,7 +290,7 @@ jobs:
         EOF
         
     - name: Upload quality report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: quality-report
@@ -316,7 +316,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
         
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
@@ -376,7 +376,7 @@ jobs:
         "
         
     - name: Upload test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results-${{ matrix.python-version }}
@@ -521,7 +521,7 @@ jobs:
         python-version: ${{ env.PYTHON_VERSION }}
         
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
         
@@ -911,7 +911,7 @@ jobs:
         fi
         
     - name: Upload audit reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: audit-reports
