@@ -1,0 +1,13 @@
+# Development dependencies for testing and code quality
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-html==4.1.1
+flake8==6.1.0
+black==23.11.0
+safety==2.3.5
+bandit==1.7.5
+requests==2.31.0
+
+# Optional: For advanced testing
+pytest-mock==3.12.0
+pytest-xdist==3.5.0  # Parallel test execution
