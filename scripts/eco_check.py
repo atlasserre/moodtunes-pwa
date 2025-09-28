@@ -53,7 +53,7 @@ def analyze_code_efficiency() -> Dict[str, float]:
     metrics = {"unused_imports": 0, "long_lines": 0, "complex_functions": 0, "total_lines": 0}
 
     for py_file in Path(".").rglob("*.py"):
-        if any(skip in str(py_file) for skip in ["__pycache__", ".git", "venv", "env"]):
+        if any(skip in str(py_file) for skip in ["__pycache__", ".git", "venv", "env", "tests/", "test_"]):
             continue
 
         try:
@@ -78,12 +78,12 @@ def analyze_code_efficiency() -> Dict[str, float]:
 
 
 def get_complexity_metrics() -> float:
-    """Analyze code complexity using radon.
+    """Analyze code complexity using radon, excluding test files.
 
     Returns:
-        float: Average cyclomatic complexity across all functions
+        float: Average cyclomatic complexity across production code functions
     """
-    complexity_output, _, complexity_rc = run_command("radon cc . -a -nc --json")
+    complexity_output, _, complexity_rc = run_command("radon cc . -a -nc --json --exclude='tests/*,**/test_*.py'")
     avg_complexity = 5.0  # Default assumption
 
     try:
@@ -290,7 +290,7 @@ def main():
         exit_code = assess_eco_quality_gate(eco_data["eco_score"])
 
         # Provide optimization recommendations
-        if score < 80:
+        if eco_data["eco_score"] < 80:
             print(f"\n💡 OPTIMIZATION RECOMMENDATIONS:")
             if eco_data["bundle_size_kb"] > 500:
                 print("  📦 Reduce bundle size - optimize images, remove unused code")
