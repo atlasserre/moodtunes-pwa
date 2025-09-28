@@ -1,0 +1,42 @@
+[tool.black]
+line-length = 127
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | env
+  | __pycache__
+  | .github
+)/
+'''
+
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moodtunes-pwa"
+version = "1.0.0"
+description = "A Progressive Web App that matches your mood to curated Spotify playlists"
+authors = [{name = "atlasserre"}]
+license = {text = "MIT"}
+requires-python = ">=3.9"
+dependencies = [
+    "flask>=2.3.0",
+    "gunicorn>=21.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "pytest-html>=4.1.1",
+    "flake8>=6.1.0",
+    "black>=23.11.0",
+    "safety>=3.0.1",
+    "bandit>=1.7.5",
+    "requests>=2.31.0"
+]
