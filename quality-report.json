@@ -1,0 +1,17 @@
+{
+  "metrics": {
+    "complexity_score": 100,
+    "maintainability_score": 80,
+    "test_coverage": 0,
+    "code_duplication": 0,
+    "security_score": 80,
+    "documentation_score": 30.46944198405669
+  },
+  "overall_score": 75.09388839681134,
+  "status": "PASSED",
+  "thresholds": {
+    "excellent": 80,
+    "good": 70,
+    "acceptable": 60
+  }
+}
