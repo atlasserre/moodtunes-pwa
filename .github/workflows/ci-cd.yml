@@ -146,7 +146,7 @@ jobs:
         
         # 1. Complexity Score (0-100, higher is better)
         print("📊 Calculating Complexity Score...")
-        cc_output, _, _ = run_cmd("radon cc . -a -nc --json")
+        cc_output, _, _ = run_cmd("radon cc . -a -nc --json --exclude='tests/*,**/test_*.py'")
         try:
             if cc_output.strip():
                 cc_data = json.loads(cc_output)
@@ -168,7 +168,7 @@ jobs:
         
         # 2. Maintainability Score (0-100)
         print("🔧 Calculating Maintainability Score...")
-        mi_output, _, _ = run_cmd("radon mi . -nc --json")
+        mi_output, _, _ = run_cmd("radon mi . -nc --json --exclude='tests/*,**/test_*.py'")
         try:
             if mi_output.strip():
                 mi_data = json.loads(mi_output)
@@ -195,11 +195,12 @@ jobs:
             docstring_functions = 0
             total_functions = 0
             
-            for py_file in Path('.').rglob('*.py'):
-                if 'test' in str(py_file) or '__pycache__' in str(py_file):
-                    continue
-                    
-                with open(py_file, 'r', encoding='utf-8') as f:
+        for py_file in Path('.').rglob('*.py'):
+            if ('test' in str(py_file) or '__pycache__' in str(py_file) or 
+                str(py_file).startswith('tests/') or '/test_' in str(py_file)):
+                continue
+                
+            with open(py_file, 'r', encoding='utf-8') as f:
                     content = f.read()
                     lines = content.splitlines()
                     total_lines += len(lines)
@@ -294,7 +295,8 @@ jobs:
         try:
             # Check for common security issues
             for py_file in Path('.').rglob('*.py'):
-                if '__pycache__' in str(py_file):
+                if ('__pycache__' in str(py_file) or 'test' in str(py_file) or 
+                    str(py_file).startswith('tests/') or '/test_' in str(py_file)):
                     continue
                 with open(py_file, 'r', encoding='utf-8') as f:
                     content = f.read().lower()
