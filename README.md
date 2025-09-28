@@ -19,6 +19,22 @@
 - Security and performance gates
 - Local development quality tools
 
+## 🔧 Development Workflow
+
+Before committing code changes, always run the formatting and quality checker:
+
+```bash
+./check_and_format.sh
+```
+
+This script will:
+- ✅ Check and apply Black code formatting
+- 🧪 Run quick tests to ensure functionality
+- 📝 Show what files were reformatted
+- 🚫 Prevent commits if tests fail
+
+**Why this matters:** Our CI/CD pipeline has strict quality gates including Black formatting checks. Running this script locally prevents pipeline failures and maintains code quality.
+
 📊 **[Quality Gates Summary](docs/QUALITY_GATES_SUMMARY.md)** - Implementation status and next stepsive Web App that curates Spotify playlists based on your current mood.
 
 ![MoodTunes Demo](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![Python](https://img.shields.io/badge/Python-3.9+-blue) ![PWA](https://img.shields.io/badge/PWA-Ready-purple)
