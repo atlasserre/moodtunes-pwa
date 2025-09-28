@@ -655,6 +655,35 @@ def service_worker():
     return response
 
 
+@app.route("/manifest.json")
+def manifest():
+    """
+    Serve PWA manifest file from root path for better discoverability.
+
+    The Web App Manifest is a JSON file that tells the browser about
+    your Progressive Web App and how it should behave when installed.
+
+    Returns:
+        Response: PWA manifest JSON file with proper headers
+
+    Headers Set:
+        - Content-Type: application/manifest+json (proper MIME type)
+
+    Note:
+        Manifest should be accessible from root for optimal PWA support
+        and browser compatibility.
+    """
+    from flask import send_from_directory
+
+    # Serve manifest file from static directory
+    response = send_from_directory("static", "manifest.json")
+
+    # Set proper MIME type for PWA manifest
+    response.headers["Content-Type"] = "application/manifest+json"
+
+    return response
+
+
 # ====================================================================
 # APPLICATION ENTRY POINT
 # ====================================================================
