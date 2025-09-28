@@ -1,0 +1,52 @@
+[run]
+# Source directories to include in coverage
+source = .
+
+# Files to include in coverage
+include = 
+    app.py
+    app_production.py
+    database_models.py
+    *.py
+
+# Files and directories to exclude from coverage
+omit = 
+    */venv/*
+    */env/*
+    */__pycache__/*
+    */tests/*
+    */test_*
+    test_*.py
+    setup.py
+    conftest.py
+    */.git/*
+    */migrations/*
+    generate_icons.py
+
+[report]
+# Show missing lines in terminal output
+show_missing = True
+
+# Exclude lines with these patterns from coverage
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod
+
+# Set minimum coverage percentage
+precision = 2
+skip_covered = False
+skip_empty = False
+
+[xml]
+output = coverage.xml
+
+[html]
+directory = htmlcov

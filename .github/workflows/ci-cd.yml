@@ -406,10 +406,10 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
         
-    - name: Run unit tests
+    - name: Run tests with coverage
       run: |
-        echo "🧪 Running comprehensive test suite..."
-        python -m pytest tests/ -v --cov=app --cov-report=xml --cov-report=html --junit-xml=pytest.xml
+        python -m pytest -v --cov=. --cov-report=term-missing --cov-report=xml --cov-config=.coveragerc
+        echo "Coverage report generated"
         
     - name: Run search functionality tests
       run: |
@@ -613,7 +613,7 @@ jobs:
         
         # Install audit tools
         npm install -g @lhci/cli@0.12.x
-        npm install -g lighthouse eco2grader axe-core
+        npm install -g lighthouse axe-core
         
     - name: Start Flask app
       run: |
