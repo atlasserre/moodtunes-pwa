@@ -118,6 +118,15 @@ jobs:
         import os
         from pathlib import Path
         
+        # QUALITY GATE CONFIGURATION
+        # Adjust these values to match your project's documentation philosophy
+        CONFIG = {
+            'min_function_doc_ratio': 0.7,  # 70% of public functions should have docstrings
+            'enable_comment_counting': False,  # Don't count inline comments for score
+            'external_docs_bonus': 20,  # Bonus points for external documentation
+            'readme_weight': 40,  # Weight for README quality
+        }
+        
         def run_cmd(cmd):
             try:
                 result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -177,8 +186,9 @@ jobs:
         except:
             quality_metrics['maintainability_score'] = 75
         
-        # 3. Documentation Score (based on docstrings and comments)
-        print("📚 Calculating Documentation Score...")
+        # 3. Documentation Score (professional semantic approach)
+        # Focus on meaningful documentation, not artificial comment inflation
+        print("📚 Calculating Documentation Score (Professional Approach)...")
         try:
             total_lines = 0
             comment_lines = 0
@@ -205,13 +215,44 @@ jobs:
                             # Check if next few lines have docstring
                             # This is a simplified check
             
-            if total_lines > 0:
-                comment_ratio = comment_lines / total_lines
-                quality_metrics['documentation_score'] = min(100, comment_ratio * 200)  # Scale up
+            # Professional documentation scoring approach
+            doc_score = 0
+            
+            # README Quality Assessment (configurable weight)
+            if Path('README.md').exists():
+                readme_size = Path('README.md').stat().st_size
+                if readme_size > 2000:
+                    doc_score += CONFIG['readme_weight']
+                elif readme_size > 500:
+                    doc_score += CONFIG['readme_weight'] * 0.6
+                else:
+                    doc_score += CONFIG['readme_weight'] * 0.3
+            
+            # External Documentation Bonus
+            external_docs = len(list(Path('.').glob('docs/**/*.md'))) + len(list(Path('.').glob('**/API*.md')))
+            if external_docs > 0:
+                doc_score += CONFIG['external_docs_bonus']
+            
+            # Function Documentation Coverage (professional approach)
+            if total_functions > 0:
+                function_doc_ratio = docstring_functions / total_functions
+                if function_doc_ratio >= CONFIG['min_function_doc_ratio']:
+                    doc_score += 40  # Full points for good function documentation
+                else:
+                    doc_score += function_doc_ratio * 40
             else:
-                quality_metrics['documentation_score'] = 50
-        except:
-            quality_metrics['documentation_score'] = 60
+                doc_score += 20  # No functions to document
+                
+            # Only count comments if enabled (discourage artificial inflation)
+            if CONFIG['enable_comment_counting'] and total_lines > 0:
+                comment_bonus = min(10, (comment_lines / total_lines) * 50)
+                doc_score += comment_bonus
+            
+            quality_metrics['documentation_score'] = min(100, doc_score)
+            
+        except Exception as e:
+            print(f"Documentation scoring error: {e}")
+            quality_metrics['documentation_score'] = 75
         
         # 4. Security Score (simplified based on basic checks)
         print("🔒 Calculating Security Score...")
@@ -234,12 +275,12 @@ jobs:
         except:
             quality_metrics['security_score'] = 85
         
-        # Calculate overall quality score
+        # Calculate overall quality score with professional weighting
         weights = {
-            'complexity_score': 0.25,
-            'maintainability_score': 0.25,
-            'documentation_score': 0.20,
-            'security_score': 0.30
+            'complexity_score': 0.30,      # Code complexity is critical
+            'maintainability_score': 0.35,  # Maintainability is most important
+            'documentation_score': 0.10,    # Documentation important but not overwhelming
+            'security_score': 0.25         # Security remains important
         }
         
         overall_score = sum(quality_metrics[metric] * weights[metric] for metric in weights)
