@@ -143,6 +143,38 @@ class TestMoodPlaylists(unittest.TestCase):
                 self.assertIsInstance(info["icon"], str, f"Icon for {mood} should be string")
 
 
+    @pytest.mark.integration
+    def test_playlist_accessibility(self):
+        """Test that all playlists are accessible via HTTP requests"""
+        try:
+            import requests
+        except ImportError:
+            self.skipTest("requests not available for accessibility testing")
+            
+        failed_playlists = []
+        
+        for mood, playlist_id in mood_playlists.items():
+            with self.subTest(mood=mood):
+                url = f'https://open.spotify.com/playlist/{playlist_id}'
+                try:
+                    response = requests.head(url, timeout=15)
+                    if response.status_code not in [200, 301, 302]:
+                        failed_playlists.append((mood, playlist_id, response.status_code))
+                        print(f"❌ {mood}: HTTP {response.status_code}")
+                    else:
+                        print(f"✅ {mood}: Accessible")
+                except requests.RequestException as e:
+                    failed_playlists.append((mood, playlist_id, str(e)))
+                    print(f"❌ {mood}: Error - {str(e)[:50]}")
+                    
+        # Report all failures at once for better visibility
+        if failed_playlists:
+            failure_msg = f"Inaccessible playlists found:\\n"
+            for mood, playlist_id, error in failed_playlists:
+                failure_msg += f"  - {mood} ({playlist_id}): {error}\\n"
+            self.fail(failure_msg)
+
+
 class TestPlaylistIntegration(unittest.TestCase):
     """Integration tests for playlist functionality"""
 

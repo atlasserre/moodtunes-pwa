@@ -27,13 +27,13 @@ mood_playlists = {
     "romantic": "37i9dQZF1DX50QitC6Oqtn",  # Love Pop
     
     # New mood additions
-    "motivated": "37i9dQZF1DX0XUfTFmNdCA",  # Beast Mode (alternative workout)
+    "motivated": "37i9dQZF1DWTl4y3vgJOXW",  # Motivation Mix (verified working & unique)
     "sleepy": "37i9dQZF1DWZd79rJ6a7lp",   # Sleep
     "focused": "37i9dQZF1DWZeKCadgRdKQ",  # Deep Focus
     "party": "37i9dQZF1DXdPec7aLTmlC",    # Pop Rising
     "nostalgic": "37i9dQZF1DX4o1oenSJRJd",  # All Out 2010s
     "angry": "37i9dQZF1DX9qNs32fujYe",    # Heavy Metal
-    "melancholy": "37i9dQZF1DX59NCqCqJtoH",  # Atmospheric Calm
+    "melancholy": "37i9dQZF1DX3rxVfibe1L0",  # Mood Booster (verified working)
     "uplifting": "37i9dQZF1DX6GwdWRQMQpq",  # Good Vibes
     "meditative": "37i9dQZF1DWZqd5JICZI0u",  # Peaceful Piano
     "running": "37i9dQZF1DWUa8ZRTfalHk"   # Power Workout
