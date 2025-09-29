@@ -30,12 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Add event listeners for quick mood buttons
-    const quickMoodButtons = document.querySelectorAll('.mood-quick-btn');
-    quickMoodButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const mood = this.getAttribute('data-mood');
-            const moodText = this.textContent.trim();
+    // Use event delegation for quick mood buttons (works even after DOM restoration)
+    document.addEventListener('click', function(event) {
+        // Check if clicked element is a quick mood button
+        if (event.target.classList.contains('mood-quick-btn') || event.target.closest('.mood-quick-btn')) {
+            const button = event.target.classList.contains('mood-quick-btn') ? event.target : event.target.closest('.mood-quick-btn');
+            const mood = button.getAttribute('data-mood');
+            const moodText = button.textContent.trim();
             
             // Update the select element
             if (moodSelect) {
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Announce to screen readers
             announceToScreenReader(`Selected ${moodText} mood from quick selection`);
-        });
+        }
     });
 });
 
@@ -65,6 +66,12 @@ function handleMoodChange() {
 
 // Show loading state with selected mood
 function showLoadingState(moodText) {
+    // If there was a previous playlist, reset UI first to restore sections
+    if (spotifyPlayer && spotifyPlayer.style.display === 'block') {
+        console.log('Resetting UI for new mood selection');
+        resetUI();
+    }
+    
     loadingDiv.innerHTML = `<span role="img" aria-label="musical note">🎵</span> Opening ${moodText} playlist...`;
     loadingDiv.style.display = 'block';
     loadingDiv.setAttribute('aria-busy', 'true');
@@ -145,8 +152,8 @@ function showPlaylist(embedUrl, moodText) {
     }
 
     
-    // Show success message with proper ARIA
-    loadingDiv.innerHTML = `<span role="img" aria-label="checkmark">✅</span> ${moodText} playlist loaded!`;
+    // Show permanent mood selection message to prevent layout shifts
+    loadingDiv.innerHTML = `<span role="img" aria-label="selected">🎵</span> Selected: <strong>${moodText}</strong> playlist`;
     loadingDiv.style.display = 'block';
     loadingDiv.setAttribute('aria-busy', 'false');
     
@@ -161,10 +168,8 @@ function showPlaylist(embedUrl, moodText) {
         }
     }, 500);
     
-    // Reset after timeout
-    setTimeout(() => {
-        resetUI();
-    }, LOADING_TIMEOUT);
+    // NO AUTOMATIC RESET - keep loading message and layout stable
+    // UI will only reset when user selects another mood or closes player
 }
 
 // Show error state
@@ -226,44 +231,8 @@ function resetUI() {
 
 // Function to close the embedded player
 function closePlayer() {
-    spotifyPlayer.style.display = 'none';
-    spotifyIframe.src = '';
-    
-    // Remove class for optimization (show other sections again)
-    document.body.classList.remove('playlist-active');
-    
-    // Restore removed sections back to DOM
-    if (window.removedSections) {
-        if (window.removedSections.suggestions && window.removedSections.suggestionsParent) {
-            if (window.removedSections.suggestionsNextSibling) {
-                window.removedSections.suggestionsParent.insertBefore(
-                    window.removedSections.suggestions, 
-                    window.removedSections.suggestionsNextSibling
-                );
-            } else {
-                window.removedSections.suggestionsParent.appendChild(window.removedSections.suggestions);
-            }
-        }
-        if (window.removedSections.recent && window.removedSections.recentParent) {
-            if (window.removedSections.recentNextSibling) {
-                window.removedSections.recentParent.insertBefore(
-                    window.removedSections.recent, 
-                    window.removedSections.recentNextSibling
-                );
-            } else {
-                window.removedSections.recentParent.appendChild(window.removedSections.recent);
-            }
-        }
-        window.removedSections = null;
-    }
-    
-    // Announce closure to screen readers
-    announceToScreenReader('Music player closed');
-    
-    // Return focus to mood selector
-    if (moodSelect) {
-        moodSelect.focus();
-    }
+    // Simple and reliable approach: refresh the page to get updated Recent section
+    window.location.reload();
 }
 
 // Helper function to announce messages to screen readers

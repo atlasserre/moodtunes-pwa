@@ -273,15 +273,14 @@ def index():
     # Session persists across requests for same user
     recent_moods = session.get("recent_moods", [])
 
-    # Get intelligent time-based mood suggestions
-    # Uses current time to suggest contextually appropriate moods
-    time_suggestions = get_time_based_suggestions()
+    # Disable time-based suggestions as per user request
+    time_suggestions = []
 
     # Prepare comprehensive data package for template rendering
     # All data is processed for immediate template consumption
     template_data = {
         "mood_categories": mood_categories,  # Complete mood organization structure
-        "recent_moods": [get_mood_display_info(mood) for mood in recent_moods[-3:]],  # Last 3 moods with display info
+        "recent_moods": [get_mood_display_info(mood) for mood in reversed(recent_moods[-3:])],  # Last 3 moods in reverse order (most recent first)
         "time_suggestions": [
             get_mood_display_info(mood) for mood in time_suggestions
         ],  # Current time suggestions with display info
