@@ -33,12 +33,12 @@ from flask import Flask, render_template, request, jsonify, session
 # APPLICATION VERSION INFORMATION
 # ====================================================================
 
-APP_VERSION = "2.1.3"  # Major.Minor.Patch - Documentation enhancement
-BUILD_DATE = "2025-09-28"
+APP_VERSION = "2.2.0"  # Major.Minor.Patch - 1080x2040 UI optimization
+BUILD_DATE = "2025-09-29"
 BUILD_INFO = {
     "version": APP_VERSION,
     "build_date": BUILD_DATE,
-    "features": ["Search", "PWA", "Quality Gates", "88% Coverage", "Documentation"],
+    "features": ["Search", "PWA", "Quality Gates", "88% Coverage", "Documentation", "1080x2040 Optimization"],
     "commit": "latest",
 }
 

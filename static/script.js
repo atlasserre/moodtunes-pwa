@@ -111,6 +111,9 @@ function showPlaylist(embedUrl, moodText) {
     
     spotifyPlayer.style.display = 'block';
     
+    // Add class for 1080x2040 optimization (hide other sections when playlist active)
+    document.body.classList.add('playlist-active');
+    
     // Show success message with proper ARIA
     loadingDiv.innerHTML = `<span role="img" aria-label="checkmark">✅</span> ${moodText} playlist loaded!`;
     loadingDiv.style.display = 'block';
@@ -152,6 +155,10 @@ function resetUI() {
     loadingDiv.style.display = 'none';
     loadingDiv.innerHTML = '<span role="img" aria-label="musical note">🎵</span> Opening your playlist...';
     loadingDiv.removeAttribute('aria-busy');
+    
+    // Remove class for 1080x2040 optimization
+    document.body.classList.remove('playlist-active');
+    
     if (moodSelect) {
         moodSelect.value = '';
         // Return focus to the select element
@@ -163,6 +170,9 @@ function resetUI() {
 function closePlayer() {
     spotifyPlayer.style.display = 'none';
     spotifyIframe.src = '';
+    
+    // Remove class for 1080x2040 optimization (show other sections again)
+    document.body.classList.remove('playlist-active');
     
     // Announce closure to screen readers
     announceToScreenReader('Music player closed');

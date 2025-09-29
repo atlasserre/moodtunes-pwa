@@ -19,7 +19,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "moodtunes-pwa"
-version = "1.0.0"
+version = "2.2.0"
 description = "A Progressive Web App that matches your mood to curated Spotify playlists"
 authors = [{name = "atlasserre"}]
 license = {text = "MIT"}
