@@ -280,7 +280,9 @@ def index():
     # All data is processed for immediate template consumption
     template_data = {
         "mood_categories": mood_categories,  # Complete mood organization structure
-        "recent_moods": [get_mood_display_info(mood) for mood in reversed(recent_moods[-3:])],  # Last 3 moods in reverse order (most recent first)
+        "recent_moods": [
+            get_mood_display_info(mood) for mood in reversed(recent_moods[-3:])
+        ],  # Last 3 moods in reverse order (most recent first)
         "time_suggestions": [
             get_mood_display_info(mood) for mood in time_suggestions
         ],  # Current time suggestions with display info
