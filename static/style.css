@@ -464,9 +464,12 @@ button:hover {
     /* Universal compact layout to prevent scrolling when playlist is displayed */
     
     /* Dynamic class applied when playlist is shown to minimize other content */
+    
+    /* Hide search section, suggestions, and recent moods when playlist is active to save space */
     body.playlist-active .suggestions-section,
-    body.playlist-active .recent-section {
-        display: none !important; /* Hide time suggestions and recent moods when playlist is active to save space */
+    body.playlist-active .recent-section,
+    body.playlist-active .search-section {
+        display: none !important; /* Hide time suggestions, recent moods, and search when playlist is active */
         visibility: hidden !important; /* Double ensure they're hidden */
         height: 0 !important;
         margin: 0 !important;
@@ -481,11 +484,13 @@ button:hover {
         visibility: hidden !important;
     }
 
-/* Force hide suggestions when Spotify player is visible (alternative approach) */
+/* Force hide suggestions and search when Spotify player is visible (alternative approach) */
 #spotify-player:not([style*="display: none"]) ~ .container .suggestions-section,
 #spotify-player:not([style*="display: none"]) ~ .container .recent-section,
+#spotify-player:not([style*="display: none"]) ~ .container .search-section,
 #spotify-player[style*="display: block"] ~ .container .suggestions-section,
-#spotify-player[style*="display: block"] ~ .container .recent-section {
+#spotify-player[style*="display: block"] ~ .container .recent-section,
+#spotify-player[style*="display: block"] ~ .container .search-section {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -496,7 +501,8 @@ button:hover {
 
 /* Universal hide when player is showing */
 body:has(#spotify-player[style*="display: block"]) .suggestions-section,
-body:has(#spotify-player[style*="display: block"]) .recent-section {
+body:has(#spotify-player[style*="display: block"]) .recent-section,
+body:has(#spotify-player[style*="display: block"]) .search-section {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -505,11 +511,7 @@ body:has(#spotify-player[style*="display: block"]) .recent-section {
     overflow: hidden !important;
 }
     
-    /* Keep search section visible but make it ultra-compact */
-    body.playlist-active .search-section {
-        padding: 5px;
-        margin-bottom: 5px;
-    }
+    /* Search section is now hidden when playlist is active - no need for compact styling */
     
     /* Make the mood form ultra-compact when playlist is active */
     body.playlist-active .form-row {
@@ -538,8 +540,8 @@ body:has(#spotify-player[style*="display: block"]) .recent-section {
     
     /* Make the playlist iframe smaller when active to ensure close button is visible */
     body.playlist-active #spotify-iframe {
-        height: 300px !important; /* Reduced from default 500px */
-        max-height: 40vh; /* Never take more than 40% of viewport height */
+        height: 280px !important; /* Further reduced for 1080x2340 format */
+        max-height: 35vh; /* Never take more than 35% of viewport height */
     }
     
     /* Ensure the close button area is always visible */
@@ -628,25 +630,25 @@ body:has(#spotify-player[style*="display: block"]) .recent-section {
     
     /* Optimized Spotify player for no-scroll experience */
     #spotify-player {
-        padding: 12px;
-        margin-top: 15px;
+        padding: 8px;
+        margin-top: 10px;
         border-radius: 8px;
     }
     
     #spotify-player h3 {
-        font-size: 1.1em;
-        margin-bottom: 10px;
+        font-size: 1em;
+        margin-bottom: 5px;
     }
     
     #spotify-iframe {
-        height: 300px; /* Reduced from 352px for better fit */
+        height: 280px; /* Further reduced for 1080x2340 format */
         border-radius: 8px;
     }
     
     #close-player-btn {
-        margin-top: 8px;
-        padding: 8px 16px;
-        font-size: 13px;
+        margin-top: 5px; /* Reduced spacing between player and close button */
+        padding: 6px 14px;
+        font-size: 12px;
     }
     
     /* Compact loading message */
@@ -668,6 +670,62 @@ body:has(#spotify-player[style*="display: block"]) .recent-section {
         left: 5px;
         font-size: 0.65rem;
         padding: 2px 5px;
+    }
+}
+
+/* Specific optimization for tall smartphones like 1080x2340 (Samsung Galaxy S21+, etc.) */
+@media screen and (max-width: 430px) and (min-height: 2200px), 
+       screen and (max-width: 430px) and (min-aspect-ratio: 19/9) {
+    body.playlist-active {
+        padding: 3px;
+    }
+    
+    body.playlist-active .container {
+        padding: 8px;
+        margin-top: 0;
+    }
+    
+    body.playlist-active h1 {
+        font-size: 1.3em;
+        margin-bottom: 8px;
+    }
+    
+    body.playlist-active #spotify-player {
+        padding: 6px;
+        margin-top: 8px;
+    }
+    
+    body.playlist-active #spotify-player h3 {
+        font-size: 0.9em;
+        margin-bottom: 3px;
+    }
+    
+    body.playlist-active #spotify-iframe {
+        height: 260px !important; /* Ultra-compact for 1080x2340 */
+        max-height: 30vh;
+    }
+    
+    body.playlist-active #close-player-btn {
+        margin-top: 3px; /* Minimal spacing between player and close button */
+        padding: 5px 12px;
+        font-size: 11px;
+    }
+    
+    /* Make form elements ultra-compact when playlist is active */
+    body.playlist-active select {
+        padding: 6px;
+        font-size: 13px;
+    }
+    
+    body.playlist-active button {
+        padding: 6px 12px;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    
+    body.playlist-active label {
+        margin-bottom: 3px;
+        font-size: 0.85em;
     }
 }
 
