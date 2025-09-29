@@ -458,15 +458,68 @@ button:hover {
     color: #764ba2;
 }
 
-/* Optimization for 1080x2040 resolution and similar ultra-tall displays */
-@media screen and (max-width: 1080px) and (min-height: 1900px) {
-    /* Ultra-compact layout to prevent scrolling */
+/* Universal no-scroll optimization for all devices when playlist is active */
+/* This applies to mobile, tablet, and desktop/laptop screens */
+@media screen {
+    /* Universal compact layout to prevent scrolling when playlist is displayed */
     
     /* Dynamic class applied when playlist is shown to minimize other content */
     body.playlist-active .suggestions-section,
-    body.playlist-active .recent-section,
+    body.playlist-active .recent-section {
+        display: none !important; /* Hide time suggestions and recent moods when playlist is active to save space */
+        visibility: hidden !important; /* Double ensure they're hidden */
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    /* Additional specific selector for time suggestions */
+    body.playlist-active div[role="region"][aria-labelledby="time-suggestions-heading"],
+    body.playlist-active div[role="region"][aria-labelledby="recent-moods-heading"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+/* Force hide suggestions when Spotify player is visible (alternative approach) */
+#spotify-player:not([style*="display: none"]) ~ .container .suggestions-section,
+#spotify-player:not([style*="display: none"]) ~ .container .recent-section,
+#spotify-player[style*="display: block"] ~ .container .suggestions-section,
+#spotify-player[style*="display: block"] ~ .container .recent-section {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Universal hide when player is showing */
+body:has(#spotify-player[style*="display: block"]) .suggestions-section,
+body:has(#spotify-player[style*="display: block"]) .recent-section {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+    
+    /* Keep search section visible but make it ultra-compact */
     body.playlist-active .search-section {
-        display: none; /* Hide these sections when playlist is active to save space */
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+    
+    /* Make the mood form ultra-compact when playlist is active */
+    body.playlist-active .form-row {
+        margin-bottom: 5px;
+    }
+    
+    body.playlist-active .mood-btn {
+        font-size: 0.8em;
+        padding: 5px 10px;
+        margin: 2px;
     }
     
     body.playlist-active fieldset {
@@ -481,6 +534,30 @@ button:hover {
     body.playlist-active select {
         padding: 8px;
         margin-bottom: 5px;
+    }
+    
+    /* Make the playlist iframe smaller when active to ensure close button is visible */
+    body.playlist-active #spotify-iframe {
+        height: 300px !important; /* Reduced from default 500px */
+        max-height: 40vh; /* Never take more than 40% of viewport height */
+    }
+    
+    /* Ensure the close button area is always visible */
+    body.playlist-active #playlist-display {
+        max-height: 50vh; /* Limit total playlist display height */
+        overflow-y: auto; /* Allow scrolling within playlist if needed */
+    }
+    
+    /* Make the container more compact when playlist is active */
+    body.playlist-active .container {
+        padding: 10px;
+        margin-top: 0;
+    }
+    
+    /* Reduce header size when playlist is active */
+    body.playlist-active h1 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
     }
     body {
         padding: 5px;

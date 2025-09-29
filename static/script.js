@@ -111,8 +111,39 @@ function showPlaylist(embedUrl, moodText) {
     
     spotifyPlayer.style.display = 'block';
     
-    // Add class for 1080x2040 optimization (hide other sections when playlist active)
+    // Add class for optimization (hide other sections when playlist active)
     document.body.classList.add('playlist-active');
+    console.log('Added playlist-active class:', document.body.classList.contains('playlist-active'));
+    
+    // Store and completely remove suggestions sections from DOM
+    const suggestionsSection = document.querySelector('.suggestions-section');
+    const recentSection = document.querySelector('.recent-section');
+    
+    // Store references and parent info for restoration
+    window.removedSections = {
+        suggestions: null,
+        recent: null,
+        suggestionsParent: null,
+        recentParent: null,
+        suggestionsNextSibling: null,
+        recentNextSibling: null
+    };
+    
+    if (suggestionsSection) {
+        window.removedSections.suggestions = suggestionsSection.cloneNode(true);
+        window.removedSections.suggestionsParent = suggestionsSection.parentNode;
+        window.removedSections.suggestionsNextSibling = suggestionsSection.nextSibling;
+        suggestionsSection.remove();
+        console.log('Completely removed suggestions section from DOM');
+    }
+    if (recentSection) {
+        window.removedSections.recent = recentSection.cloneNode(true);
+        window.removedSections.recentParent = recentSection.parentNode;
+        window.removedSections.recentNextSibling = recentSection.nextSibling;
+        recentSection.remove();
+        console.log('Completely removed recent section from DOM');
+    }
+
     
     // Show success message with proper ARIA
     loadingDiv.innerHTML = `<span role="img" aria-label="checkmark">✅</span> ${moodText} playlist loaded!`;
@@ -156,8 +187,35 @@ function resetUI() {
     loadingDiv.innerHTML = '<span role="img" aria-label="musical note">🎵</span> Opening your playlist...';
     loadingDiv.removeAttribute('aria-busy');
     
-    // Remove class for 1080x2040 optimization
+    // Remove class for optimization
     document.body.classList.remove('playlist-active');
+    
+    // Restore removed sections back to DOM
+    if (window.removedSections) {
+        if (window.removedSections.suggestions && window.removedSections.suggestionsParent) {
+            if (window.removedSections.suggestionsNextSibling) {
+                window.removedSections.suggestionsParent.insertBefore(
+                    window.removedSections.suggestions, 
+                    window.removedSections.suggestionsNextSibling
+                );
+            } else {
+                window.removedSections.suggestionsParent.appendChild(window.removedSections.suggestions);
+            }
+            console.log('Restored suggestions section to DOM');
+        }
+        if (window.removedSections.recent && window.removedSections.recentParent) {
+            if (window.removedSections.recentNextSibling) {
+                window.removedSections.recentParent.insertBefore(
+                    window.removedSections.recent, 
+                    window.removedSections.recentNextSibling
+                );
+            } else {
+                window.removedSections.recentParent.appendChild(window.removedSections.recent);
+            }
+            console.log('Restored recent section to DOM');
+        }
+        window.removedSections = null;
+    }
     
     if (moodSelect) {
         moodSelect.value = '';
@@ -171,8 +229,33 @@ function closePlayer() {
     spotifyPlayer.style.display = 'none';
     spotifyIframe.src = '';
     
-    // Remove class for 1080x2040 optimization (show other sections again)
+    // Remove class for optimization (show other sections again)
     document.body.classList.remove('playlist-active');
+    
+    // Restore removed sections back to DOM
+    if (window.removedSections) {
+        if (window.removedSections.suggestions && window.removedSections.suggestionsParent) {
+            if (window.removedSections.suggestionsNextSibling) {
+                window.removedSections.suggestionsParent.insertBefore(
+                    window.removedSections.suggestions, 
+                    window.removedSections.suggestionsNextSibling
+                );
+            } else {
+                window.removedSections.suggestionsParent.appendChild(window.removedSections.suggestions);
+            }
+        }
+        if (window.removedSections.recent && window.removedSections.recentParent) {
+            if (window.removedSections.recentNextSibling) {
+                window.removedSections.recentParent.insertBefore(
+                    window.removedSections.recent, 
+                    window.removedSections.recentNextSibling
+                );
+            } else {
+                window.removedSections.recentParent.appendChild(window.removedSections.recent);
+            }
+        }
+        window.removedSections = null;
+    }
     
     // Announce closure to screen readers
     announceToScreenReader('Music player closed');

@@ -33,7 +33,7 @@ from flask import Flask, render_template, request, jsonify, session
 # APPLICATION VERSION INFORMATION
 # ====================================================================
 
-APP_VERSION = "2.2.0"  # Major.Minor.Patch - 1080x2040 UI optimization
+APP_VERSION = "2.2.1"  # Major.Minor.Patch - 1080x2040 UI optimization
 BUILD_DATE = "2025-09-29"
 BUILD_INFO = {
     "version": APP_VERSION,
