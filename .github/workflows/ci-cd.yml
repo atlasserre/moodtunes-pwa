@@ -38,9 +38,27 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
         
-    - name: Code formatting check (Black)
+    - name: Auto-format code with Black
       run: |
-        echo "🖤 Checking code formatting with Black..."
+        echo "🖤 Auto-formatting code with Black..."
+        black .
+        
+    - name: Commit formatting changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        if git diff --staged --quiet; then
+          echo "✅ No formatting changes needed"
+        else
+          echo "� Committing formatting changes..."
+          git commit -m "style: Auto-format code with Black [skip ci]"
+          git push
+        fi
+        
+    - name: Code formatting verification
+      run: |
+        echo "🖤 Verifying code formatting with Black..."
         black --check --diff .
         
     - name: Linting (Flake8)
