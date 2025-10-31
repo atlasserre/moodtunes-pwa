@@ -151,7 +151,7 @@ class TestFrontendIntegration(unittest.TestCase):
         # Check for common malformation patterns that caused the original bug
         malformed_patterns = [
             # These patterns should not appear as standalone text
-            "placeholder=\"Try 'workout', 'chill', 'study', or 'jazz'...\"\n           aria-label=",
+            "placeholder=\"Try 'workout', 'chill', 'study'...\"\n           aria-label=",
             'aria-label="Search playlists"\n           autocomplete=',
             'autocomplete="off">\n    <button',
         ]

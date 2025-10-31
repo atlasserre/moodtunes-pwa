@@ -22,7 +22,15 @@ from typing import Dict, Tuple
 
 
 def run_command(cmd: str) -> Tuple[str, str, int]:
-    """Run a shell command and return stdout, stderr, and return code."""
+    """
+    Run a shell command and return stdout, stderr, and return code.
+
+    Args:
+        cmd (str): Command to execute in the shell.
+
+    Returns:
+        Tuple[str, str, int]: stdout, stderr, and return code.
+    """
     try:
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30)
         return result.stdout, result.stderr, result.returncode
@@ -33,7 +41,12 @@ def run_command(cmd: str) -> Tuple[str, str, int]:
 
 
 def calculate_bundle_size() -> float:
-    """Calculate total bundle size in KB."""
+    """
+    Calculate total bundle size in KB by summing all files in the static directory.
+
+    Returns:
+        float: Total bundle size in kilobytes.
+    """
     static_dir = Path("static")
     total_size = 0
 
@@ -49,7 +62,13 @@ def calculate_bundle_size() -> float:
 
 
 def analyze_code_efficiency() -> Dict[str, float]:
-    """Analyze code for efficiency metrics."""
+    """
+    Analyze code for efficiency metrics such as unused imports, long lines, and function size.
+
+    Returns:
+        Dict[str, float]: Dictionary of efficiency metrics.
+    """
+    # Only analyze non-test, non-virtualenv files for efficiency
     metrics = {"unused_imports": 0, "long_lines": 0, "complex_functions": 0, "total_lines": 0}
 
     for py_file in Path(".").rglob("*.py"):
@@ -78,11 +97,13 @@ def analyze_code_efficiency() -> Dict[str, float]:
 
 
 def get_complexity_metrics() -> float:
-    """Analyze code complexity using radon, excluding test files.
+    """
+    Analyze code complexity using radon, explicitly excluding test files.
 
     Returns:
-        float: Average cyclomatic complexity across production code functions
+        float: Average cyclomatic complexity across production code functions (excluding tests)
     """
+    # Exclude test files from complexity calculation as per quality gates summary
     complexity_output, _, complexity_rc = run_command("radon cc . -a -nc --json --exclude='tests/*,**/test_*.py'")
     avg_complexity = 5.0  # Default assumption
 
@@ -109,10 +130,11 @@ def get_complexity_metrics() -> float:
 
 
 def calculate_bundle_factor(bundle_size_kb: float) -> float:
-    """Calculate bundle size eco factor score.
+    """
+    Calculate bundle size eco factor score.
 
     Args:
-        bundle_size_kb: Bundle size in kilobytes
+        bundle_size_kb (float): Bundle size in kilobytes
 
     Returns:
         float: Score from 0-100 (higher is better)
@@ -128,10 +150,11 @@ def calculate_bundle_factor(bundle_size_kb: float) -> float:
 
 
 def calculate_complexity_factor(avg_complexity: float) -> float:
-    """Calculate complexity eco factor score.
+    """
+    Calculate complexity eco factor score based on average cyclomatic complexity.
 
     Args:
-        avg_complexity: Average cyclomatic complexity
+        avg_complexity (float): Average cyclomatic complexity
 
     Returns:
         float: Score from 0-100 (higher is better)
@@ -147,11 +170,12 @@ def calculate_complexity_factor(avg_complexity: float) -> float:
 
 
 def calculate_efficiency_factor(total_lines: int, bundle_size_kb: float) -> float:
-    """Calculate code efficiency factor score.
+    """
+    Calculate code efficiency factor score based on lines of code per KB.
 
     Args:
-        total_lines: Total lines of code
-        bundle_size_kb: Bundle size in kilobytes
+        total_lines (int): Total lines of code
+        bundle_size_kb (float): Bundle size in kilobytes
 
     Returns:
         float: Score from 0-100 (higher is better)
@@ -221,10 +245,11 @@ def calculate_eco_score() -> Dict[str, any]:
 
 
 def display_eco_report(eco_data: Dict[str, any]) -> None:
-    """Display formatted eco impact report.
+    """
+    Display formatted eco impact report.
 
     Args:
-        eco_data: Dictionary containing eco metrics and scores
+        eco_data (Dict[str, any]): Dictionary containing eco metrics and scores
     """
     print("\n📊 ECO IMPACT REPORT")
     print("=" * 25)
@@ -241,10 +266,11 @@ def display_eco_report(eco_data: Dict[str, any]) -> None:
 
 
 def assess_eco_quality_gate(score: float) -> int:
-    """Assess eco score against quality gates and display results.
+    """
+    Assess eco score against quality gates and display results.
 
     Args:
-        score: Eco score from 0-100
+        score (float): Eco score from 0-100
 
     Returns:
         int: Exit code (0 for pass, 1 for fail)
@@ -268,11 +294,13 @@ def assess_eco_quality_gate(score: float) -> int:
 
 
 def main():
-    """Main eco check function that orchestrates the environmental impact assessment.
+    """
+    Main eco check function that orchestrates the environmental impact assessment.
 
     Validates environment, calculates eco metrics, displays results,
     and provides optimization recommendations.
     """
+    # Entry point for eco check script
     print("🌱 MoodTunes PWA - Eco Impact Check")
     print("=" * 40)
 
